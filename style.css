@@ -1,7 +1,10 @@
-body {
+*{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+body {
     background-color: #ffffff;
 }
 
@@ -12,7 +15,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: auto;
-    height: 25px;
+    height: 46px;
     padding: 10px 20px;
     border-bottom: 1px solid #ddd;
     flex-wrap: wrap;
@@ -144,4 +147,101 @@ body {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
     color: black;
+}
+
+/* sticky-note Styles */
+
+.sticky-note {
+    margin-top: 200px;
+    margin-left: 200px;
+    width: 200px;
+    height: 180px;
+    padding: 5px;
+    background: #eee;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+}
+
+.note-text {
+    font-size: 16px;
+    margin-bottom: 95px;
+    color: #555;
+    padding: 10px;
+}
+
+.note-date {
+    font-size: 12px;
+    color: #888;
+    padding: 2px;
+}
+
+.note-colors {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2px 0px 0px 15px;
+    opacity: 0;
+}
+
+.color-options {
+    display: flex;
+    gap: 4px;
+}
+
+.color-circle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid #acaaaa;
+    cursor: pointer;
+}
+
+.color-circle:hover {
+    border: 1px solid #666;
+}
+
+.color-circle.gray {
+    background: #eee;
+}
+
+.color-circle.red {
+    background: #f28b82;
+}
+
+.color-circle.green {
+    background: #ccff90;
+}
+
+.color-circle.blue {
+    background: #aecbfa;
+}
+
+.delete-btn {
+    background: #ea3a2a;
+    color: #fff;
+    width: 18px;
+    height: 18px;
+    border: none;
+    border-radius: 50%;
+    font-size: 9.5px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #d32f2f;
+}
+
+.sticky-note:hover {
+    transform: translateY(-5px);
+    border: 1px solid #6a6a6a;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    .note-text {
+        margin-bottom: 75px;
+    }
+    .note-colors {
+        opacity: 1;
+        transition: opacity 0.4s ease;
+    }
 }
