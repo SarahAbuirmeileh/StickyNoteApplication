@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <script src="script.js"></script>
+ 
   <title>Sticky notes</title>
 </head>
 
@@ -35,15 +35,17 @@
       <p class="note-date">Added On: Nov 28, 2024</p>
       <div class="note-colors">
         <div class="color-options">
-          <div class="color-circle gray"></div>
-          <div class="color-circle red"></div>
-          <div class="color-circle green"></div>
-          <div class="color-circle blue"></div>
+          <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event)"></div>
+          <div class="color-circle red" data-color="red" onclick="changeNoteColor(event)"></div>
+          <div class="color-circle green" data-color="green" onclick="changeNoteColor(event)"></div>
+          <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event)"></div>
         </div>
         <button class="delete-btn">X</button>
       </div>
     </div>
   </main>
+
+  <script src="script.js"></script>
 </body>
 
 </html>
