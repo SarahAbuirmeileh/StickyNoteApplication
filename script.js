@@ -1,13 +1,16 @@
+const boards = [];
+
+
 // Change the background color of a sticky note based on the clicked color circle.
 // TODO: To be changed to edit on notes object in the array
 const changeNoteColor = (event) => {
 
     // Define a mapping of color names to their respective hex color values
     const colorValue = {
-        gray: '#eee',       
-        red: '#f28b82',    
-        green: '#ccff90',  
-        blue: '#aecbfa'    
+        gray: '#eee',
+        red: '#f28b82',
+        green: '#ccff90',
+        blue: '#aecbfa'
     };
 
     // Get the clicked color circle element
@@ -32,7 +35,7 @@ const changeDate = (event) => {
     const currentDate = new Date();
 
     // Get the abbreviated month (first 3 letters), day, and year
-    const month = currentDate.toLocaleString('en-US', { month: 'short' }); 
+    const month = currentDate.toLocaleString('en-US', { month: 'short' });
     const day = currentDate.getDate();
     const year = currentDate.getFullYear();
 
@@ -49,4 +52,34 @@ const changeDate = (event) => {
     }
 };
 
+/*
 
+    Board : {
+        id          -> unique
+        name        -> At first 'new board'
+        createDate  -> current date
+        notes       -> notes inside this board
+    }
+        
+*/
+
+// Function to create new board and give it :  unique  id, creationDate, name : by default give it a name with this formate 'New Board()' 
+const createBoard = () => {
+
+    // Get the number of board who has 'New Board' as a first part of their name (# of boards the user did not change their default name)
+    let numberOfBoardsWithNewBoardName = boards.filter(board => board.name.startsWith("New Board")).length;
+
+    /* Create new name for the board in this formate 'New Board()'and the number between brackets is given according to the 
+       number of already existing boards with 'New Board' name */
+    let newBoardName = `New Board${numberOfBoardsWithNewBoardName ? `(${numberOfBoardsWithNewBoardName})` : ""}`;
+    
+    const newBoard = {
+        id: crypto.randomUUID(), 
+        name: newBoardName,
+        creationDate: new Date(),
+        notes : []
+    }
+
+    boards.push(newBoard);
+    // console.log(boards);
+}
