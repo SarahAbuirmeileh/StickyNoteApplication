@@ -1,3 +1,5 @@
+const boardsElement = document.getElementById("boards");
+
 const boards = [];
 
 
@@ -63,6 +65,17 @@ const changeDate = (event) => {
         
 */
 
+
+// Function to render all boards, and by default activate the first board
+const renderBoards = ()=>{
+    boardsElement.innerHTML = "";
+
+    boards.forEach((board, index) => {
+        boardsElement.insertAdjacentHTML('beforeend', `
+            <button class="board-tab ${!index ? "active" : ""}">${board.name}</button>`);
+    })
+}
+
 // Function to create new board and give it :  unique  id, creationDate, name : by default give it a name with this formate 'New Board()' 
 const createBoard = () => {
 
@@ -81,5 +94,7 @@ const createBoard = () => {
     }
 
     boards.push(newBoard);
+    renderBoards();
     // console.log(boards);
 }
+
