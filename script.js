@@ -49,4 +49,71 @@ const changeDate = (event) => {
     }
 };
 
+// Function to create a new sticky note
+const createStickyNote = () => {
+  // Generate random position and size
+  const randomX = Math.floor(Math.random() * (window.innerWidth - 200)); 
+  const randomY = Math.floor(Math.random() * (window.innerHeight - 230)); 
+  const width = 200; 
+  const height = 180; 
+  const color = 'gray'; 
+
+  // Get the current date
+  const currentDate = new Date();
+  const month = currentDate.toLocaleString('en-US', { month: 'short' });
+  const day = currentDate.getDate();
+  const year = currentDate.getFullYear();
+  const formattedDate = `${month} ${day}, ${year}`;
+
+  // Create a sticky note object
+  const noteObject = {
+    content: '', 
+    color: color,
+    width: width,
+    height: height,
+    positionX: randomX,
+    positionY: randomY,
+    createdDate: formattedDate,
+    archived: false
+  };
+  
+  // For testing only, it should be deleted when handle rendering.
+  // {
+  // Create a new sticky note element
+  const stickyNoteElement = document.createElement('div');
+  stickyNoteElement.className = 'sticky-note';
+  stickyNoteElement.style.width = `${width}px`;
+  stickyNoteElement.style.height = `${height}px`;
+  stickyNoteElement.style.left = `${randomX}px`;
+  stickyNoteElement.style.top = `${randomY}px`;
+  stickyNoteElement.style.position = 'absolute';
+  stickyNoteElement.style.backgroundColor = '#eee'; 
+
+  // Add content to the sticky note
+  stickyNoteElement.innerHTML = `
+    <p class="note-text" contenteditable="true">New note</p>
+    <p class="note-date">Created On: ${formattedDate}</p>
+    <div class="note-colors">
+      <div class="color-options">
+        <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event)"></div>
+        <div class="color-circle red" data-color="red" onclick="changeNoteColor(event)"></div>
+        <div class="color-circle green" data-color="green" onclick="changeNoteColor(event)"></div>
+        <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event)"></div>
+      </div>
+      <button class="delete-btn">X</button>
+    </div>
+  `;
+
+  // Append the sticky note to the board container
+  const boardContainer = document.querySelector('.board-container');
+  boardContainer.appendChild(stickyNoteElement);
+  // }
+
+  return noteObject;
+};
+
+const addButton = document.querySelector('.add-btn');
+addButton.addEventListener('click', () => {
+  createStickyNote();
+});
 
