@@ -77,6 +77,7 @@ const renderBoards = () => {
                 class="board-tab ${board.activated ? "active" : ""}" 
                 contenteditable="true" 
                 onblur="editBoardName(event, ${index})"
+                onclick="activateBoard(${index})"
             >${board.name}</button>
         `);
         // onblur: is triggered when a user finishes interacting with a contenteditable element
@@ -120,4 +121,16 @@ const editBoardName = (event, index) => {
     } else {
         alert("Board name cannot be empty!")
     }
+};
+
+// Activate board when click on it 
+const activateBoard = (index)=>{
+    // To ensure that just obe board is activated 
+    boards.forEach(board => board.activated = false);
+
+    // Activate the new board
+    boards[index].activated = true;
+    
+    // To see the results
+    renderBoards();
 };
