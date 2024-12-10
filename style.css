@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -149,7 +149,7 @@ body {
     color: black;
 }
 
-.board-container{
+.board-container {
     position: relative;
 }
 
@@ -240,9 +240,11 @@ body {
     transform: translateY(-5px);
     border: 1px solid #6a6a6a;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+
     .note-text {
         margin-bottom: 75px;
     }
+
     .note-colors {
         opacity: 1;
         transition: opacity 0.4s ease;
