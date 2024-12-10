@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -152,15 +152,19 @@ body {
 /* sticky-note Styles */
 
 .sticky-note {
+    position: relative;
     margin-top: 200px;
     margin-left: 200px;
     width: 200px;
     height: 180px;
-    padding: 5px;
+    padding: 3px 12px 9px 8px;
     background: #eee;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
 }
 
@@ -237,11 +241,27 @@ body {
     transform: translateY(-5px);
     border: 1px solid #6a6a6a;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+
     .note-text {
         margin-bottom: 75px;
     }
+
     .note-colors {
         opacity: 1;
         transition: opacity 0.4s ease;
     }
+}
+
+.resizer {
+    width: 7px;
+    height: 7px;
+    background-color: #eee;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+    border-radius: 10%;
+    border: 1px solid #eee;
+    margin: 2px;
+    border-bottom-right-radius: 50%;
 }
