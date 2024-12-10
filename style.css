@@ -149,12 +149,13 @@ body {
     color: black;
 }
 
+.board-container {
+    position: relative;
+}
+
 /* sticky-note Styles */
 
 .sticky-note {
-    position: relative;
-    margin-top: 200px;
-    margin-left: 200px;
     width: 200px;
     height: 180px;
     padding: 3px 12px 9px 8px;
@@ -166,6 +167,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+    position: relative;
 }
 
 .note-text {
