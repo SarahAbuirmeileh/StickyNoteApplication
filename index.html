@@ -15,7 +15,7 @@
     <!-- Left side of the navbar: Board tabs -->
     <div class="nav-left" id="boards">
       <button class="board-tab active" contenteditable="true">Board X</button>
-      <button class="board-tab">Board Y</button>
+      <button class="board-tab" oninput="editBoardName(event)">Board Y</button>
     </div>
     <!-- Right side of the navbar: Search and actions -->
     <div class="nav-right">
@@ -24,7 +24,7 @@
       </div>
       <div class="actions">
         <button class="archived-btn">🗑️ Archived</button>
-        <button class="new-board-btn" onclick="createBoard()">New Board</button>
+        <button class="new-board-btn" onclick="createBoard(event, )">New Board</button>
         <button class="add-btn">+</button>
       </div>
     </div>

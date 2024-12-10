@@ -61,19 +61,26 @@ const changeDate = (event) => {
         name        -> At first 'new board'
         createDate  -> current date
         notes       -> notes inside this board
+        activated   -> when click it should be true  
     }
         
 */
 
 
-// Function to render all boards, and by default activate the first board
-const renderBoards = ()=>{
+// Function to render all boards
+const renderBoards = () => {
     boardsElement.innerHTML = "";
 
     boards.forEach((board, index) => {
         boardsElement.insertAdjacentHTML('beforeend', `
-            <button class="board-tab ${!index ? "active" : ""}">${board.name}</button>`);
-    })
+            <button 
+                class="board-tab ${board.activated ? "active" : ""}" 
+                contenteditable="true" 
+                onblur="editBoardName(event, ${index})"
+            >${board.name}</button>
+        `);
+        // onblur: is triggered when a user finishes interacting with a contenteditable element
+    });
 }
 
 // Function to create new board and give it :  unique  id, creationDate, name : by default give it a name with this formate 'New Board()' 
@@ -85,12 +92,13 @@ const createBoard = () => {
     /* Create new name for the board in this formate 'New Board()'and the number between brackets is given according to the 
        number of already existing boards with 'New Board' name */
     let newBoardName = `New Board${numberOfBoardsWithNewBoardName ? `(${numberOfBoardsWithNewBoardName})` : ""}`;
-    
+
     const newBoard = {
-        id: crypto.randomUUID(), 
+        id: crypto.randomUUID(),
         name: newBoardName,
         creationDate: new Date(),
-        notes : []
+        notes: [],
+        activated: false
     }
 
     boards.push(newBoard);
@@ -98,3 +106,18 @@ const createBoard = () => {
     // console.log(boards);
 }
 
+// function to edit the board name 
+const editBoardName = (event, index) => {
+
+    // Get the edited board name from the element (allowed since the board element is contenteditable)
+    const newName = event.target.textContent.trim();
+
+    // Change if the user write a name
+    if (newName) {
+        // Update the board name in the boards array
+        boards[index].name = newName;
+        // console.log(`update board name to: ${newName}`);
+    } else {
+        alert("Board name cannot be empty!")
+    }
+};
