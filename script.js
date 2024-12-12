@@ -4,8 +4,7 @@ const boards = [];
 
 
 // Change the background color of a sticky note based on the clicked color circle.
-// TODO: To be changed to edit on notes object in the array
-const changeNoteColor = (event) => {
+const changeNoteColor = (event, index) => {
 
     // Define a mapping of color names to their respective hex color values
     const colorValue = {
@@ -17,15 +16,19 @@ const changeNoteColor = (event) => {
 
     // Get the clicked color circle element
     const colorCircle = event.target;
-
-    // Get sticky note whose background color needs to change
-    const note = colorCircle.closest('.sticky-note');
-
     const color = colorCircle.getAttribute('data-color');
 
-    // If a sticky note is found and a valid color is provided -> change the color
-    if (note && color) {
-        note.style.backgroundColor = colorValue[color];
+    // Get sticky note whose background color needs to change
+    // const note = colorCircle.closest('.sticky-note');
+
+    const currentBoard = getActivatedBoard();
+    if(currentBoard){
+        // If a sticky note is found and a valid color is provided -> change the color
+        if(color){
+            currentBoard.notes[index].color = colorValue[color];
+        }
+    }else{
+       console.log('Activation board problem');
     }
 
     // Update the resizer color to match the note color
@@ -33,11 +36,12 @@ const changeNoteColor = (event) => {
     if (resizer) {
         resizer.style.backgroundColor = colorValue[color];
     }
+
+    //TODO : Render notes
 };
 
 // Function to update the "Edited On" date when the note content changes
-// TODO: To be changed to edit on notes object in the array
-const changeDate = (event) => {
+const changeDate = (index) => {
     // Get the current date
     const currentDate = new Date();
 
@@ -50,13 +54,21 @@ const changeDate = (event) => {
     const formattedDate = `${month} ${day}, ${year}`;
 
     // Find the note's date paragraph (.note-date)
-    const note = event.target.closest('.sticky-note');
-    const noteDateElement = note.querySelector('.note-date');
+    // const note = event.target.closest('.sticky-note');
+    // const noteDateElement = note.querySelector('.note-date');
 
     // Update the text content of the .note-date paragraph to "Edited On: <current date>"
-    if (noteDateElement) {
-        noteDateElement.textContent = `Edited On: ${formattedDate}`;
+    // if (noteDateElement) {
+    //     noteDateElement.textContent = `Edited On: ${formattedDate}`;
+    // }
+
+    const currentBoard = getActivatedBoard();
+    if(currentBoard){
+        currentBoard.notes[index].createdDate = `Edited On: ${formattedDate}`;
+    }else{
+       console.log('Activation board problem');
     }
+    // TODO: Render the notes 
 };
 
 /*
@@ -246,6 +258,24 @@ const initializeDragAndDrop = (note) => {
     });
 };
 
+// Return the first activated board, if more than one is activated make them inactive, if not one is active return null
+const getActivatedBoard = ()=>{
+    // Get all activated boards
+    const activatedBoards =  boards.filter(board => board.activated);
+
+    // If more than 1 board is active, keep the first one active and inactive the others
+    if (activatedBoards && activatedBoards.length > 1){
+        activatedBoards.forEach((board, index)=>{
+            if(!index){
+                board.activated = false;
+            }
+        })
+    }
+
+    // Return the first activated board, if no one is active return null
+    return activatedBoards ? activatedBoards[0] : null;
+}
+
 // Function to create a new sticky note
 const createStickyNote = () => {
     // Generate random position and size
@@ -270,50 +300,57 @@ const createStickyNote = () => {
         height: height,
         positionX: randomX,
         positionY: randomY,
-        createdDate: formattedDate,
+        createdDate: `Added On: ${formattedDate}`,
         archived: false
     };
 
     // For testing only, it should be deleted when handle rendering.
     // {
     // Create a new sticky note element
-    const stickyNoteElement = document.createElement('div');
-    stickyNoteElement.className = 'sticky-note';
-    stickyNoteElement.style.width = `${width}px`;
-    stickyNoteElement.style.height = `${height}px`;
-    stickyNoteElement.style.left = `${randomX}px`;
-    stickyNoteElement.style.top = `${randomY}px`;
-    stickyNoteElement.style.position = 'absolute';
-    stickyNoteElement.style.backgroundColor = '#eee';
+    // const stickyNoteElement = document.createElement('div');
+    // stickyNoteElement.className = 'sticky-note';
+    // stickyNoteElement.style.width = `${width}px`;
+    // stickyNoteElement.style.height = `${height}px`;
+    // stickyNoteElement.style.left = `${randomX}px`;
+    // stickyNoteElement.style.top = `${randomY}px`;
+    // stickyNoteElement.style.position = 'absolute';
+    // stickyNoteElement.style.backgroundColor = '#eee';
 
     // Add content to the sticky note
-    stickyNoteElement.innerHTML = `
-      <p class="note-text">New note</p>
-      <div class="Bottom-elements">
-      <p class="note-date">Created On: ${formattedDate}</p>
-      <div class="note-colors">
-        <div class="color-options">
-          <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event)"></div>
-          <div class="color-circle red" data-color="red" onclick="changeNoteColor(event)"></div>
-          <div class="color-circle green" data-color="green" onclick="changeNoteColor(event)"></div>
-          <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event)"></div>
-        </div>
-        </div>
-        <button class="delete-btn">X</button>
-      </div>
-      <!-- Resizer element -->
-      <div class="resizer"></div>
-    `;
+    // stickyNoteElement.innerHTML = `
+    //   <p class="note-text">New note</p>
+    //   <div class="Bottom-elements">
+    //   <p class="note-date">Created On: ${formattedDate}</p>
+    //   <div class="note-colors">
+    //     <div class="color-options">
+    //       <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event)"></div>
+    //       <div class="color-circle red" data-color="red" onclick="changeNoteColor(event)"></div>
+    //       <div class="color-circle green" data-color="green" onclick="changeNoteColor(event)"></div>
+    //       <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event)"></div>
+    //     </div>
+    //     </div>
+    //     <button class="delete-btn">X</button>
+    //   </div>
+    //   <!-- Resizer element -->
+    //   <div class="resizer"></div>
+    // `;
 
     // Append the sticky note to the board container
-    const boardContainer = document.querySelector('.board-container');
-    boardContainer.appendChild(stickyNoteElement);
+    // const boardContainer = document.querySelector('.board-container');
+    // boardContainer.appendChild(stickyNoteElement);
 
     // Initialize resizer and drag-and-drop for the new note
-    initializeResizer(stickyNoteElement);
-    initializeDragAndDrop(stickyNoteElement);
+    // initializeResizer(stickyNoteElement);
+    // initializeDragAndDrop(stickyNoteElement);
 
-    return noteObject;
+    const currentBoard = getActivatedBoard();
+    if(currentBoard){
+        currentBoard.notes.push(noteObject);
+        // TODO: Render the notes
+        // console.log(noteObject);
+    }else{
+       console.log('Activation board problem');
+    }
 };
 
 const addButton = document.querySelector('.add-btn');
@@ -323,15 +360,24 @@ addButton.addEventListener('click', () => {
 
 
 // function to edit the content of a note 
-// TODO : Edit the note content in the current board array
 const editNoteContent = (event, index) => {
 
     // Get the edited board name from the element (allowed since the board element is contenteditable)
     const newContent = event.target.textContent.trim();
   
     // It should edit the note in the current board, so first we get the activated board then edit the note with that index
-    // const boardIndex = boards.forEach((board, index)=>{if(board.activated) return index})
-    // It's possible to let the note empty 
-    // boards[boardIndex].notes[index] = newContent;
+    const currentBoard = getActivatedBoard();
+    if(currentBoard){
+        //Change the note content,  it's possible to let the note empty 
+        currentBoard.notes[index].content = newContent;
+
+        // Change the date for the note after editing it
+        changeDate(index);
+        
+        //TODO : Render the notes
+    }else{
+       console.log('Activation board problem');
+    }
+    
     console.log(`update note content to: ${newContent}`);
   };
