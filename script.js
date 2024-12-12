@@ -1,3 +1,8 @@
+const boardsElement = document.getElementById("boards");
+
+const boards = [];
+
+
 // Change the background color of a sticky note based on the clicked color circle.
 // TODO: To be changed to edit on notes object in the array
 const changeNoteColor = (event) => {
@@ -52,6 +57,87 @@ const changeDate = (event) => {
     if (noteDateElement) {
         noteDateElement.textContent = `Edited On: ${formattedDate}`;
     }
+};
+
+/*
+
+    Board : {
+        id          -> unique
+        name        -> At first 'new board'
+        createDate  -> current date
+        notes       -> notes inside this board
+        activated   -> when click it should be true  
+    }
+        
+*/
+
+
+// Function to render all boards
+const renderBoards = () => {
+    boardsElement.innerHTML = "";
+
+    boards.forEach((board, index) => {
+        boardsElement.insertAdjacentHTML('beforeend', `
+            <button 
+                class="board-tab ${board.activated ? "active" : ""}" 
+                contenteditable="true" 
+                onblur="editBoardName(event, ${index})"
+                onclick="activateBoard(${index})"
+            >${board.name}</button>
+        `);
+        // onblur: is triggered when a user finishes interacting with a contenteditable element
+    });
+}
+
+// Function to create new board and give it :  unique  id, creationDate, name : by default give it a name with this formate 'New Board()' 
+const createBoard = () => {
+
+    // Get the number of board who has 'New Board' as a first part of their name (# of boards the user did not change their default name)
+    let numberOfBoardsWithNewBoardName = boards.filter(board => board.name.startsWith("New Board")).length;
+
+    /* Create new name for the board in this formate 'New Board()'and the number between brackets is given according to the 
+       number of already existing boards with 'New Board' name */
+    let newBoardName = `New Board${numberOfBoardsWithNewBoardName ? `(${numberOfBoardsWithNewBoardName})` : ""}`;
+
+    const newBoard = {
+        id: crypto.randomUUID(),
+        name: newBoardName,
+        creationDate: new Date(),
+        notes: [],
+        activated: false
+    }
+
+    boards.push(newBoard);
+    renderBoards();
+    // console.log(boards);
+}
+
+// function to edit the board name 
+const editBoardName = (event, index) => {
+
+    // Get the edited board name from the element (allowed since the board element is contenteditable)
+    const newName = event.target.textContent.trim();
+
+    // Change if the user write a name
+    if (newName) {
+        // Update the board name in the boards array
+        boards[index].name = newName;
+        // console.log(`update board name to: ${newName}`);
+    } else {
+        alert("Board name cannot be empty!")
+    }
+};
+
+// Activate board when click on it 
+const activateBoard = (index)=>{
+    // To ensure that just obe board is activated 
+    boards.forEach(board => board.activated = false);
+
+    // Activate the new board
+    boards[index].activated = true;
+    
+    // To see the results
+    renderBoards();
 };
 
 // Function to enable resizing for a sticky note
