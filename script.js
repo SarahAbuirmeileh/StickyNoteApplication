@@ -70,15 +70,21 @@ const initializeResizer = (note) => {
         // Calculate the change in width and height based on mouse movement
         const deltaWidth = event.clientX - originalMouseX;
         const deltaHeight = event.clientY - originalMouseY;
-
-        // Use the larger change (to maintain square resizing, if required)
         const maxDelta = Math.max(deltaWidth, deltaHeight);
 
-        // Calculate the new width and height of the note (Maintain the normal size and do not reduce the card any more.)
-        const newWidth = Math.max(originalWidth, originalWidth + maxDelta);
-        const newHeight = Math.max(originalHeight, originalHeight + maxDelta);
+        // Calculate new width and height (maintain the note size within minimum dimensions)
+        let newWidth = originalWidth + maxDelta;
+        let newHeight = originalHeight + maxDelta;
 
-        // Apply the new dimensions to the note
+        // Prevent the note from exceeding the window's right or bottom boundary
+        newWidth = Math.min(newWidth, 400);
+        newHeight = Math.min(newHeight, 380);
+
+        // Ensure that the note is not too small
+        newWidth = Math.max(newWidth, 200);  // Minimum width
+        newHeight = Math.max(newHeight, 180); // Minimum height
+
+        // Apply the new width and height to the note
         note.style.width = `${newWidth}px`;
         note.style.height = `${newHeight}px`;
     };
@@ -108,7 +114,6 @@ const initializeResizer = (note) => {
         window.addEventListener('mouseup', stopResize);
     });
 };
-
 
 // Function to enable drag-and-drop functionality for a sticky note
 const initializeDragAndDrop = (note) => {
@@ -197,7 +202,7 @@ const createStickyNote = () => {
 
     // Add content to the sticky note
     stickyNoteElement.innerHTML = `
-      <p class="note-text" contenteditable="true">New note</p>
+      <p class="note-text">New note</p>
       <div class="Bottom-elements">
       <p class="note-date">Created On: ${formattedDate}</p>
       <div class="note-colors">
@@ -207,8 +212,8 @@ const createStickyNote = () => {
           <div class="color-circle green" data-color="green" onclick="changeNoteColor(event)"></div>
           <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event)"></div>
         </div>
+        </div>
         <button class="delete-btn">X</button>
-      </div>
       </div>
       <!-- Resizer element -->
       <div class="resizer"></div>
