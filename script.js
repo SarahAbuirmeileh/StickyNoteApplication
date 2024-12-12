@@ -270,50 +270,56 @@ const createStickyNote = () => {
         height: height,
         positionX: randomX,
         positionY: randomY,
-        createdDate: formattedDate,
+        createdDate: `Added On: ${formattedDate}`,
         archived: false
     };
 
     // For testing only, it should be deleted when handle rendering.
     // {
     // Create a new sticky note element
-    const stickyNoteElement = document.createElement('div');
-    stickyNoteElement.className = 'sticky-note';
-    stickyNoteElement.style.width = `${width}px`;
-    stickyNoteElement.style.height = `${height}px`;
-    stickyNoteElement.style.left = `${randomX}px`;
-    stickyNoteElement.style.top = `${randomY}px`;
-    stickyNoteElement.style.position = 'absolute';
-    stickyNoteElement.style.backgroundColor = '#eee';
+    // const stickyNoteElement = document.createElement('div');
+    // stickyNoteElement.className = 'sticky-note';
+    // stickyNoteElement.style.width = `${width}px`;
+    // stickyNoteElement.style.height = `${height}px`;
+    // stickyNoteElement.style.left = `${randomX}px`;
+    // stickyNoteElement.style.top = `${randomY}px`;
+    // stickyNoteElement.style.position = 'absolute';
+    // stickyNoteElement.style.backgroundColor = '#eee';
 
     // Add content to the sticky note
-    stickyNoteElement.innerHTML = `
-      <p class="note-text">New note</p>
-      <div class="Bottom-elements">
-      <p class="note-date">Created On: ${formattedDate}</p>
-      <div class="note-colors">
-        <div class="color-options">
-          <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event)"></div>
-          <div class="color-circle red" data-color="red" onclick="changeNoteColor(event)"></div>
-          <div class="color-circle green" data-color="green" onclick="changeNoteColor(event)"></div>
-          <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event)"></div>
-        </div>
-        </div>
-        <button class="delete-btn">X</button>
-      </div>
-      <!-- Resizer element -->
-      <div class="resizer"></div>
-    `;
+    // stickyNoteElement.innerHTML = `
+    //   <p class="note-text">New note</p>
+    //   <div class="Bottom-elements">
+    //   <p class="note-date">Created On: ${formattedDate}</p>
+    //   <div class="note-colors">
+    //     <div class="color-options">
+    //       <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event)"></div>
+    //       <div class="color-circle red" data-color="red" onclick="changeNoteColor(event)"></div>
+    //       <div class="color-circle green" data-color="green" onclick="changeNoteColor(event)"></div>
+    //       <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event)"></div>
+    //     </div>
+    //     </div>
+    //     <button class="delete-btn">X</button>
+    //   </div>
+    //   <!-- Resizer element -->
+    //   <div class="resizer"></div>
+    // `;
 
     // Append the sticky note to the board container
-    const boardContainer = document.querySelector('.board-container');
-    boardContainer.appendChild(stickyNoteElement);
+    // const boardContainer = document.querySelector('.board-container');
+    // boardContainer.appendChild(stickyNoteElement);
 
     // Initialize resizer and drag-and-drop for the new note
-    initializeResizer(stickyNoteElement);
-    initializeDragAndDrop(stickyNoteElement);
+    // initializeResizer(stickyNoteElement);
+    // initializeDragAndDrop(stickyNoteElement);
 
-    return noteObject;
+    const currentBoard = boards.filter(board => board.activated);
+    if(currentBoard.length < 1){
+        console.log(`Board activation problem `);
+    }else{
+        currentBoard[0].notes.push(noteObject);
+        console.log(noteObject);
+    }
 };
 
 const addButton = document.querySelector('.add-btn');
