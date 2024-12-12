@@ -4,8 +4,7 @@ const boards = [];
 
 
 // Change the background color of a sticky note based on the clicked color circle.
-// TODO: To be changed to edit on notes object in the array
-const changeNoteColor = (event) => {
+const changeNoteColor = (event, index) => {
 
     // Define a mapping of color names to their respective hex color values
     const colorValue = {
@@ -17,15 +16,19 @@ const changeNoteColor = (event) => {
 
     // Get the clicked color circle element
     const colorCircle = event.target;
-
-    // Get sticky note whose background color needs to change
-    const note = colorCircle.closest('.sticky-note');
-
     const color = colorCircle.getAttribute('data-color');
 
-    // If a sticky note is found and a valid color is provided -> change the color
-    if (note && color) {
-        note.style.backgroundColor = colorValue[color];
+    // Get sticky note whose background color needs to change
+    // const note = colorCircle.closest('.sticky-note');
+
+    const currentBoard = getActivatedBoard();
+    if(currentBoard){
+        // If a sticky note is found and a valid color is provided -> change the color
+        if(color){
+            currentBoard.notes[index].color = colorValue[color];
+        }
+    }else{
+       console.log('Activation board problem');
     }
 
     // Update the resizer color to match the note color
@@ -33,6 +36,8 @@ const changeNoteColor = (event) => {
     if (resizer) {
         resizer.style.backgroundColor = colorValue[color];
     }
+
+    //TODO : Render notes
 };
 
 // Function to update the "Edited On" date when the note content changes
@@ -63,7 +68,7 @@ const changeDate = (index) => {
     }else{
        console.log('Activation board problem');
     }
-    // TODO: Render the notes & boards
+    // TODO: Render the notes 
 };
 
 /*
@@ -341,7 +346,7 @@ const createStickyNote = () => {
     const currentBoard = getActivatedBoard();
     if(currentBoard){
         currentBoard.notes.push(noteObject);
-        // TODO: Render the notes & boards
+        // TODO: Render the notes
         // console.log(noteObject);
     }else{
        console.log('Activation board problem');
