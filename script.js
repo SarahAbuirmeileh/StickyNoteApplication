@@ -36,8 +36,7 @@ const changeNoteColor = (event) => {
 };
 
 // Function to update the "Edited On" date when the note content changes
-// TODO: To be changed to edit on notes object in the array
-const changeDate = (event) => {
+const changeDate = (index) => {
     // Get the current date
     const currentDate = new Date();
 
@@ -50,13 +49,21 @@ const changeDate = (event) => {
     const formattedDate = `${month} ${day}, ${year}`;
 
     // Find the note's date paragraph (.note-date)
-    const note = event.target.closest('.sticky-note');
-    const noteDateElement = note.querySelector('.note-date');
+    // const note = event.target.closest('.sticky-note');
+    // const noteDateElement = note.querySelector('.note-date');
 
     // Update the text content of the .note-date paragraph to "Edited On: <current date>"
-    if (noteDateElement) {
-        noteDateElement.textContent = `Edited On: ${formattedDate}`;
+    // if (noteDateElement) {
+    //     noteDateElement.textContent = `Edited On: ${formattedDate}`;
+    // }
+
+    const currentBoard = getActivatedBoard();
+    if(currentBoard){
+        currentBoard.notes[index].createdDate = `Edited On: ${formattedDate}`;
+    }else{
+       console.log('Activation board problem');
     }
+    // TODO: Render the notes & boards
 };
 
 /*
@@ -246,6 +253,24 @@ const initializeDragAndDrop = (note) => {
     });
 };
 
+// Return the first activated board, if more than one is activated make them inactive, if not one is active return null
+const getActivatedBoard = ()=>{
+    // Get all activated boards
+    const activatedBoards =  boards.filter(board => board.activated);
+
+    // If more than 1 board is active, keep the first one active and inactive the others
+    if (activatedBoards && activatedBoards.length > 1){
+        activatedBoards.forEach((board, index)=>{
+            if(!index){
+                board.activated = false;
+            }
+        })
+    }
+
+    // Return the first activated board, if no one is active return null
+    return activatedBoards ? activatedBoards[0] : null;
+}
+
 // Function to create a new sticky note
 const createStickyNote = () => {
     // Generate random position and size
@@ -313,12 +338,13 @@ const createStickyNote = () => {
     // initializeResizer(stickyNoteElement);
     // initializeDragAndDrop(stickyNoteElement);
 
-    const currentBoard = boards.filter(board => board.activated);
-    if(currentBoard.length < 1){
-        console.log(`Board activation problem `);
+    const currentBoard = getActivatedBoard();
+    if(currentBoard){
+        currentBoard.notes.push(noteObject);
+        // TODO: Render the notes & boards
+        // console.log(noteObject);
     }else{
-        currentBoard[0].notes.push(noteObject);
-        console.log(noteObject);
+       console.log('Activation board problem');
     }
 };
 
