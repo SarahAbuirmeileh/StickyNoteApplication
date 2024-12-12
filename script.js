@@ -360,15 +360,24 @@ addButton.addEventListener('click', () => {
 
 
 // function to edit the content of a note 
-// TODO : Edit the note content in the current board array
 const editNoteContent = (event, index) => {
 
     // Get the edited board name from the element (allowed since the board element is contenteditable)
     const newContent = event.target.textContent.trim();
   
     // It should edit the note in the current board, so first we get the activated board then edit the note with that index
-    // const boardIndex = boards.forEach((board, index)=>{if(board.activated) return index})
-    // It's possible to let the note empty 
-    // boards[boardIndex].notes[index] = newContent;
+    const currentBoard = getActivatedBoard();
+    if(currentBoard){
+        //Change the note content,  it's possible to let the note empty 
+        currentBoard.notes[index].content = newContent;
+
+        // Change the date for the note after editing it
+        changeDate(index);
+        
+        //TODO : Render the notes
+    }else{
+       console.log('Activation board problem');
+    }
+    
     console.log(`update note content to: ${newContent}`);
   };
