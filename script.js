@@ -37,7 +37,7 @@ const renderCurrentBoardNotes = ()=>{
                         background-color: ${note.color};
                         width: ${note.width}px;
                         height: ${note.height}px;
-                    ">
+                    "> 
                     <p class="note-text" contenteditable="true" onblur="editNoteContent(event, ${index})" >${note.content}</p>
                     <div class="Bottom-elements">
                     <p class="note-date">${note.createdDate}</p>
@@ -52,7 +52,7 @@ const renderCurrentBoardNotes = ()=>{
                     <button class="delete-btn">X</button>
                 </div>
                 <!-- Resizer element -->
-                <div class="resizer"></div>
+                <div class="resizer" style="background-color:${note.color}"></div>
             `);
             // onblur: is triggered when a user finishes interacting with a contenteditable element
 
@@ -100,7 +100,6 @@ const changeNoteColor = (event, index) => {
     //     resizer.style.backgroundColor = colorValue[color];
     // }
 
-    //TODO : Render notes
     renderCurrentBoardNotes();
 };
 
@@ -132,7 +131,6 @@ const changeDate = (index) => {
     }else{
        console.log('Activation board problem');
     }
-    // TODO: Render the notes 
     renderCurrentBoardNotes();
 };
 
@@ -412,7 +410,6 @@ const createStickyNote = () => {
     if(currentBoard){
         currentBoard.notes.push(noteObject);
         renderCurrentBoardNotes();
-        // TODO: Render the notes
         // console.log(noteObject);
     }else{
        console.log('Activation board problem');
@@ -440,7 +437,6 @@ const editNoteContent = (event, index) => {
         // Change the date for the note after editing it
         changeDate(index);
         renderCurrentBoardNotes();
-        //TODO : Render the notes
     }else{
        console.log('Activation board problem');
     }
