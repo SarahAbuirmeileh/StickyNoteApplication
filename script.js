@@ -11,7 +11,7 @@ const getActivatedBoard = () => {
     // If more than 1 board is active, keep the first one active and inactive the others
     if (activatedBoards && activatedBoards.length > 1) {
         activatedBoards.forEach((board, index) => {
-            if (!index) {
+            if (index) {
                 board.activated = false;
             }
         })
