@@ -16,6 +16,13 @@ const getActivatedBoard = ()=>{
             }
         })
     }
+    
+    // If no board is active -> activate the first board
+    if(boards.length !== 0 && activatedBoards.length === 0){
+        boards[0].activated = true;
+        activatedBoards.push(boards[0]);
+        renderBoards();
+    }
 
     // Return the first activated board, if no one is active return null
     return activatedBoards ? activatedBoards[0] : null;
@@ -61,7 +68,8 @@ const renderCurrentBoardNotes = ()=>{
             initializeDragAndDrop(noteElement, index);
         });
     }else{
-       console.log('Activation board problem');
+       console.log('No boards exists');
+       alert("Create new board");
     }
 }
 
@@ -91,7 +99,8 @@ const changeNoteColor = (event, index) => {
             // console.log(boards);
         }
     }else{
-       console.log('Activation board problem');
+        console.log('No boards exists');
+        alert("Create new board")
     }
 
     // Update the resizer color to match the note color
@@ -129,7 +138,8 @@ const changeDate = (index) => {
     if(currentBoard){
         currentBoard.notes[index].createdDate = `Edited On: ${formattedDate}`;
     }else{
-       console.log('Activation board problem');
+        console.log('No boards exists');
+        alert("Create new board")
     }
     renderCurrentBoardNotes();
 };
@@ -157,12 +167,19 @@ const renderBoards = () => {
                 class="board-tab ${board.activated ? "active" : ""}" 
                 contenteditable="true" 
                 onblur="editBoardName(event, ${index})"
-                onclick="activateBoard(${index})"
+                onclick="handleBoardClick(${index})"
             >${board.name}</button>
         `);
         // onblur: is triggered when a user finishes interacting with a contenteditable element
     });
+    getActivatedBoard();
 }
+
+// Wrapper to handle board click 
+const handleBoardClick = (index) => {
+    // Delay the activation to allow `onblur` to complete
+    setTimeout(() => activateBoard(index), 300);
+};
 
 // Function to create new board and give it :  unique  id, creationDate, name : by default give it a name with this formate 'New Board()' 
 const createBoard = () => {
@@ -201,6 +218,7 @@ const editBoardName = (event, index) => {
     } else {
         alert("Board name cannot be empty!")
     }
+    activateBoard(index);
 };
 
 // Activate board when click on it 
@@ -213,6 +231,7 @@ const activateBoard = (index)=>{
     
     // To see the results
     renderBoards();
+    renderCurrentBoardNotes();
 };
 
 // Function to enable resizing for a sticky note
@@ -255,7 +274,8 @@ const initializeResizer = (note, index) => {
             currentBoard.notes[index].height = newHeight;
             renderCurrentBoardNotes();
         }else{
-        console.log('Activation board problem');
+            console.log('No boards exists');
+            alert("Create new board")
         }
     };
 
@@ -321,7 +341,8 @@ const initializeDragAndDrop = (note, index) => {
             currentBoard.notes[index].positionY = newTop;
             renderCurrentBoardNotes();
         }else{
-        console.log('Activation board problem');
+            console.log('No boards exists');
+            alert("Create new board")
         }
     };
 
@@ -412,7 +433,8 @@ const createStickyNote = () => {
         renderCurrentBoardNotes();
         // console.log(noteObject);
     }else{
-       console.log('Activation board problem');
+        console.log('No boards exists');
+        alert("Create new board")
     }
 };
 
@@ -438,8 +460,9 @@ const editNoteContent = (event, index) => {
         changeDate(index);
         renderCurrentBoardNotes();
     }else{
-       console.log('Activation board problem');
+        console.log('No boards exists');
+        alert("Create new board")
     }
     
-    console.log(`update note content to: ${newContent}`);
+    // console.log(`update note content to: ${newContent}`);
   };
