@@ -1,7 +1,69 @@
 const boardsElement = document.getElementById("boards");
+const notesContainerElement = document.getElementById("notes-container");
 
 const boards = [];
 
+// Return the first activated board, if more than one is activated make them inactive, if not one is active return null
+const getActivatedBoard = ()=>{
+    // Get all activated boards
+    const activatedBoards =  boards.filter(board => board.activated);
+
+    // If more than 1 board is active, keep the first one active and inactive the others
+    if (activatedBoards && activatedBoards.length > 1){
+        activatedBoards.forEach((board, index)=>{
+            if(!index){
+                board.activated = false;
+            }
+        })
+    }
+
+    // Return the first activated board, if no one is active return null
+    return activatedBoards ? activatedBoards[0] : null;
+}
+
+const renderCurrentBoardNotes = ()=>{
+    const currentBoard = getActivatedBoard();
+    if(currentBoard){
+        const currentNotes = currentBoard.notes;
+        notesContainerElement.innerHTML = "";
+
+        currentNotes.forEach((note, index) => {
+            notesContainerElement.insertAdjacentHTML('beforeend', `
+                <div class="sticky-note"
+                    style="
+                        position: absolute;
+                        top: ${note.positionY}px;
+                        left: ${note.positionX}px;
+                        background-color: ${note.color};
+                        width: ${note.width}px;
+                        height: ${note.height}px;
+                    ">
+                    <p class="note-text" contenteditable="true" onblur="editNoteContent(event, ${index})" >${note.content}</p>
+                    <div class="Bottom-elements">
+                    <p class="note-date">${note.createdDate}</p>
+                    <div class="note-colors"> 
+                        <div class="color-options">
+                            <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event, ${index})"></div>
+                            <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, ${index})"></div>
+                            <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, ${index})"></div>
+                            <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, ${index})"></div>
+                        </div>
+                    </div>
+                    <button class="delete-btn">X</button>
+                </div>
+                <!-- Resizer element -->
+                <div class="resizer"></div>
+            `);
+            // onblur: is triggered when a user finishes interacting with a contenteditable element
+
+            const noteElement = notesContainerElement.lastElementChild;
+            initializeResizer(noteElement);
+            initializeDragAndDrop(noteElement);
+        });
+    }else{
+       console.log('Activation board problem');
+    }
+}
 
 // Change the background color of a sticky note based on the clicked color circle.
 const changeNoteColor = (event, index) => {
@@ -26,18 +88,20 @@ const changeNoteColor = (event, index) => {
         // If a sticky note is found and a valid color is provided -> change the color
         if(color){
             currentBoard.notes[index].color = colorValue[color];
+            // console.log(boards);
         }
     }else{
        console.log('Activation board problem');
     }
 
     // Update the resizer color to match the note color
-    const resizer = note.querySelector('.resizer');
-    if (resizer) {
-        resizer.style.backgroundColor = colorValue[color];
-    }
+    // const resizer = note.querySelector('.resizer');
+    // if (resizer) {
+    //     resizer.style.backgroundColor = colorValue[color];
+    // }
 
     //TODO : Render notes
+    renderCurrentBoardNotes();
 };
 
 // Function to update the "Edited On" date when the note content changes
@@ -69,6 +133,7 @@ const changeDate = (index) => {
        console.log('Activation board problem');
     }
     // TODO: Render the notes 
+    renderCurrentBoardNotes();
 };
 
 /*
@@ -258,24 +323,6 @@ const initializeDragAndDrop = (note) => {
     });
 };
 
-// Return the first activated board, if more than one is activated make them inactive, if not one is active return null
-const getActivatedBoard = ()=>{
-    // Get all activated boards
-    const activatedBoards =  boards.filter(board => board.activated);
-
-    // If more than 1 board is active, keep the first one active and inactive the others
-    if (activatedBoards && activatedBoards.length > 1){
-        activatedBoards.forEach((board, index)=>{
-            if(!index){
-                board.activated = false;
-            }
-        })
-    }
-
-    // Return the first activated board, if no one is active return null
-    return activatedBoards ? activatedBoards[0] : null;
-}
-
 // Function to create a new sticky note
 const createStickyNote = () => {
     // Generate random position and size
@@ -283,7 +330,7 @@ const createStickyNote = () => {
     const randomY = Math.floor(Math.random() * (window.innerHeight - 230));
     const width = 200;
     const height = 180;
-    const color = 'gray';
+    const color = '#eee';
 
     // Get the current date
     const currentDate = new Date();
@@ -342,10 +389,11 @@ const createStickyNote = () => {
     // Initialize resizer and drag-and-drop for the new note
     // initializeResizer(stickyNoteElement);
     // initializeDragAndDrop(stickyNoteElement);
-
+    
     const currentBoard = getActivatedBoard();
     if(currentBoard){
         currentBoard.notes.push(noteObject);
+        renderCurrentBoardNotes();
         // TODO: Render the notes
         // console.log(noteObject);
     }else{
@@ -373,7 +421,7 @@ const editNoteContent = (event, index) => {
 
         // Change the date for the note after editing it
         changeDate(index);
-        
+        renderCurrentBoardNotes();
         //TODO : Render the notes
     }else{
        console.log('Activation board problem');
