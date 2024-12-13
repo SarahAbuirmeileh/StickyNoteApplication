@@ -48,6 +48,7 @@ const renderCurrentBoardNotes = () => {
                         "> 
                         <p class="note-text" 
                            contenteditable="true" 
+                           ondblclick="this.focus()"
                            onblur="editNoteContent(event, ${index})">
                             ${note.content}
                         </p>
