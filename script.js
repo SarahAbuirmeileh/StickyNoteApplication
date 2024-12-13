@@ -288,7 +288,7 @@ const initializeResizer = (note, index) => {
 };
 
 // Function to enable drag-and-drop functionality for a sticky note
-const initializeDragAndDrop = (note) => {
+const initializeDragAndDrop = (note, index) => {
     let offsetX = 0; // Offset between mouse and note's left edge
     let offsetY = 0; // Offset between mouse and note's top edge
 
@@ -316,6 +316,15 @@ const initializeDragAndDrop = (note) => {
         // Apply the new position to the note
         note.style.left = `${newLeft}px`;
         note.style.top = `${newTop}px`;
+
+        const currentBoard = getActivatedBoard();
+        if(currentBoard){
+            currentBoard.notes[index].positionX = newLeft;
+            currentBoard.notes[index].positionY = newTop;
+            renderCurrentBoardNotes();
+        }else{
+        console.log('Activation board problem');
+        }
     };
 
     // Function to stop dragging
