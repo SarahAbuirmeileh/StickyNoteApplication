@@ -4,21 +4,21 @@ const notesContainerElement = document.getElementById("notes-container");
 const boards = [];
 
 // Return the first activated board, if more than one is activated make them inactive, if not one is active return null
-const getActivatedBoard = ()=>{
+const getActivatedBoard = () => {
     // Get all activated boards
-    const activatedBoards =  boards.filter(board => board.activated);
+    const activatedBoards = boards.filter(board => board.activated);
 
     // If more than 1 board is active, keep the first one active and inactive the others
-    if (activatedBoards && activatedBoards.length > 1){
-        activatedBoards.forEach((board, index)=>{
-            if(!index){
+    if (activatedBoards && activatedBoards.length > 1) {
+        activatedBoards.forEach((board, index) => {
+            if (!index) {
                 board.activated = false;
             }
         })
     }
-    
+
     // If no board is active -> activate the first board
-    if(boards.length !== 0 && activatedBoards.length === 0){
+    if (boards.length !== 0 && activatedBoards.length === 0) {
         boards[0].activated = true;
         activatedBoards.push(boards[0]);
         renderBoards();
@@ -28,48 +28,55 @@ const getActivatedBoard = ()=>{
     return activatedBoards ? activatedBoards[0] : null;
 }
 
-const renderCurrentBoardNotes = ()=>{
+const renderCurrentBoardNotes = () => {
     const currentBoard = getActivatedBoard();
-    if(currentBoard){
+    if (currentBoard) {
         const currentNotes = currentBoard.notes;
         notesContainerElement.innerHTML = "";
 
         currentNotes.forEach((note, index) => {
-            notesContainerElement.insertAdjacentHTML('beforeend', `
-                <div class="sticky-note"
-                    style="
-                        position: absolute;
-                        top: ${note.positionY}px;
-                        left: ${note.positionX}px;
-                        background-color: ${note.color};
-                        width: ${note.width}px;
-                        height: ${note.height}px;
-                    "> 
-                    <p class="note-text" contenteditable="true" onblur="editNoteContent(event, ${index})" >${note.content}</p>
-                    <div class="Bottom-elements">
-                    <p class="note-date">${note.createdDate}</p>
-                    <div class="note-colors"> 
-                        <div class="color-options">
-                            <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event, ${index})"></div>
-                            <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, ${index})"></div>
-                            <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, ${index})"></div>
-                            <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, ${index})"></div>
+            if (!note.archived) {
+                notesContainerElement.insertAdjacentHTML('beforeend', `
+                    <div class="sticky-note"
+                        style="
+                            position: absolute;
+                            top: ${note.positionY}px;
+                            left: ${note.positionX}px;
+                            background-color: ${note.color};
+                            width: ${note.width}px;
+                            height: ${note.height}px;
+                        "> 
+                        <p class="note-text" 
+                           contenteditable="true" 
+                           onblur="editNoteContent(event, ${index})">
+                            ${note.content}
+                        </p>
+                        <div class="Bottom-elements">
+                            <p class="note-date">${note.createdDate}</p>
+                            <div class="note-colors"> 
+                                <div class="color-options">
+                                    <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event, ${index})"></div>
+                                    <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, ${index})"></div>
+                                    <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, ${index})"></div>
+                                    <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, ${index})"></div>
+                                </div>
+                            </div>
+                            <button class="delete-btn" onclick="deleteNote(${index})">X</button>
                         </div>
+                        <!-- Resizer element -->
+                        <div class="resizer" style="background-color:${note.color}"></div>
                     </div>
-                    <button class="delete-btn">X</button>
-                </div>
-                <!-- Resizer element -->
-                <div class="resizer" style="background-color:${note.color}"></div>
-            `);
-            // onblur: is triggered when a user finishes interacting with a contenteditable element
+                `);
+                // onblur: is triggered when a user finishes interacting with a contenteditable element
 
-            const noteElement = notesContainerElement.lastElementChild;
-            initializeResizer(noteElement, index);
-            initializeDragAndDrop(noteElement, index);
+                const noteElement = notesContainerElement.lastElementChild;
+                initializeResizer(noteElement, index);
+                initializeDragAndDrop(noteElement, index);
+            }
         });
-    }else{
-       console.log('No boards exists');
-       alert("Create new board");
+    } else {
+        console.log('No boards exists');
+        alert("Create new board");
     }
 }
 
@@ -92,13 +99,13 @@ const changeNoteColor = (event, index) => {
     // const note = colorCircle.closest('.sticky-note');
 
     const currentBoard = getActivatedBoard();
-    if(currentBoard){
+    if (currentBoard) {
         // If a sticky note is found and a valid color is provided -> change the color
-        if(color){
+        if (color) {
             currentBoard.notes[index].color = colorValue[color];
             // console.log(boards);
         }
-    }else{
+    } else {
         console.log('No boards exists');
         alert("Create new board")
     }
@@ -135,9 +142,9 @@ const changeDate = (index) => {
     // }
 
     const currentBoard = getActivatedBoard();
-    if(currentBoard){
+    if (currentBoard) {
         currentBoard.notes[index].createdDate = `Edited On: ${formattedDate}`;
-    }else{
+    } else {
         console.log('No boards exists');
         alert("Create new board")
     }
@@ -222,13 +229,13 @@ const editBoardName = (event, index) => {
 };
 
 // Activate board when click on it 
-const activateBoard = (index)=>{
+const activateBoard = (index) => {
     // To ensure that just obe board is activated 
     boards.forEach(board => board.activated = false);
 
     // Activate the new board
     boards[index].activated = true;
-    
+
     // To see the results
     renderBoards();
     renderCurrentBoardNotes();
@@ -269,11 +276,11 @@ const initializeResizer = (note, index) => {
         note.style.height = `${newHeight}px`;
 
         const currentBoard = getActivatedBoard();
-        if(currentBoard){
+        if (currentBoard) {
             currentBoard.notes[index].width = newWidth;
             currentBoard.notes[index].height = newHeight;
             renderCurrentBoardNotes();
-        }else{
+        } else {
             console.log('No boards exists');
             alert("Create new board")
         }
@@ -336,11 +343,11 @@ const initializeDragAndDrop = (note, index) => {
         note.style.top = `${newTop}px`;
 
         const currentBoard = getActivatedBoard();
-        if(currentBoard){
+        if (currentBoard) {
             currentBoard.notes[index].positionX = newLeft;
             currentBoard.notes[index].positionY = newTop;
             renderCurrentBoardNotes();
-        }else{
+        } else {
             console.log('No boards exists');
             alert("Create new board")
         }
@@ -426,13 +433,13 @@ const createStickyNote = () => {
     // Initialize resizer and drag-and-drop for the new note
     // initializeResizer(stickyNoteElement);
     // initializeDragAndDrop(stickyNoteElement);
-    
+
     const currentBoard = getActivatedBoard();
-    if(currentBoard){
+    if (currentBoard) {
         currentBoard.notes.push(noteObject);
         renderCurrentBoardNotes();
         // console.log(noteObject);
-    }else{
+    } else {
         console.log('No boards exists');
         alert("Create new board")
     }
@@ -449,20 +456,20 @@ const editNoteContent = (event, index) => {
 
     // Get the edited board name from the element (allowed since the board element is contenteditable)
     const newContent = event.target.textContent.trim();
-  
+
     // It should edit the note in the current board, so first we get the activated board then edit the note with that index
     const currentBoard = getActivatedBoard();
-    if(currentBoard){
+    if (currentBoard) {
         //Change the note content,  it's possible to let the note empty 
         currentBoard.notes[index].content = newContent;
 
         // Change the date for the note after editing it
         changeDate(index);
         renderCurrentBoardNotes();
-    }else{
+    } else {
         console.log('No boards exists');
         alert("Create new board")
     }
-    
+
     // console.log(`update note content to: ${newContent}`);
-  };
+};
