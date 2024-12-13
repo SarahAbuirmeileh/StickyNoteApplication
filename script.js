@@ -57,8 +57,8 @@ const renderCurrentBoardNotes = ()=>{
             // onblur: is triggered when a user finishes interacting with a contenteditable element
 
             const noteElement = notesContainerElement.lastElementChild;
-            initializeResizer(noteElement);
-            initializeDragAndDrop(noteElement);
+            initializeResizer(noteElement, index);
+            initializeDragAndDrop(noteElement, index);
         });
     }else{
        console.log('Activation board problem');
@@ -218,7 +218,7 @@ const activateBoard = (index)=>{
 };
 
 // Function to enable resizing for a sticky note
-const initializeResizer = (note) => {
+const initializeResizer = (note, index) => {
     // Find the element responsible for resizing within each note
     const resizer = note.querySelector('.resizer');
 
@@ -250,6 +250,15 @@ const initializeResizer = (note) => {
         // Apply the new width and height to the note
         note.style.width = `${newWidth}px`;
         note.style.height = `${newHeight}px`;
+
+        const currentBoard = getActivatedBoard();
+        if(currentBoard){
+            currentBoard.notes[index].width = newWidth;
+            currentBoard.notes[index].height = newHeight;
+            renderCurrentBoardNotes();
+        }else{
+        console.log('Activation board problem');
+        }
     };
 
     // Function to stop resizing when the mouse is released
