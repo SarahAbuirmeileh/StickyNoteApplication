@@ -116,18 +116,26 @@ body {
 .nav-left {
     display: flex;
     align-items: center;
-    gap: 1px;
-    margin-left: 33px;
-    margin-bottom: -12px;
+    margin-left: 20px;
+    margin-bottom: -20px;
     overflow-x: hidden;
     flex-wrap: nowrap;
 }
 
+.board-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+    flex-wrap: nowrap;
+    gap: 5px;
+}
+
 .board-tab {
+    flex-grow: 1;
     background-color: #E4DEDE;
     border: 1px solid #E4DEDE;
     border-radius: 5px;
-    padding: 5px 20px;
+    padding: 5px 23px 5px 3px;
     cursor: pointer;
     color: #7c7c7c;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -138,6 +146,19 @@ body {
     text-wrap-mode: nowrap;
 }
 
+.delete-board-btn {
+    background: #ea3a2a;
+    color: #fff;
+    width: 12px;
+    height: 12px;
+    border: none;
+    border-radius: 50%;
+    font-size: 6.5px;
+    cursor: pointer;
+    margin-left: -23px;
+    margin-right: 6px;
+}
+
 .board-tab.active {
     background-color: #ffffff;
     border: 1px solid #ffffff;
@@ -146,7 +167,6 @@ body {
 }
 
 .board-tab:hover {
-    font-size: 13px;
     background-color: #e1d2d2;
     border: 1px solid #ddd;
     border-bottom-left-radius: 0px;
@@ -241,7 +261,8 @@ body {
     right: 7px;
 }
 
-.delete-btn:hover {
+.delete-btn:hover,
+.delete-board-btn:hover {
     background: #d32f2f;
 }
 
