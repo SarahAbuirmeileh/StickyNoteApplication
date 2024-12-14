@@ -8,6 +8,10 @@ body {
     background-color: #ffffff;
 }
 
+.fa-trash {
+    margin-right: 5px;
+}
+
 /* Navbar Styles */
 .navbar {
     background-color: #E4DEDE;
@@ -39,8 +43,13 @@ body {
     flex-wrap: wrap;
 }
 
+.fa-magnifying-glass {
+    position: absolute;
+    left: 10px;
+}
+
 .search-bar {
-    padding: 5px 10px 5px 10px;
+    padding: 5px 10px 5px 33px;
     border: 1px solid #ccc;
     border-radius: 20px;
     width: 18vw;
@@ -173,7 +182,7 @@ body {
     border-bottom-right-radius: 0px;
 }
 
-.board-tab.active + .delete-board-btn {
+.board-tab.active+.delete-board-btn {
     visibility: visible;
 }
 
