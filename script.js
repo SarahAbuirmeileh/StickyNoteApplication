@@ -179,8 +179,8 @@ const renderBoards = () => {
                     onclick="handleBoardClick(${index})"
                 >
                 ${board.name}
-                <button class="delete-board-btn" onclick="deleteBoard(${index})">X</button>
                 </button>
+                <button class="delete-board-btn" onclick="deleteBoard(${index})">X</button>
             </div>
         `);
         // onblur: is triggered when a user finishes interacting with a contenteditable element
