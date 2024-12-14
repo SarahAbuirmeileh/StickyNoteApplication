@@ -171,17 +171,31 @@ const renderBoards = () => {
 
     boards.forEach((board, index) => {
         boardsElement.insertAdjacentHTML('beforeend', `
-            <button 
-                class="board-tab ${board.activated ? "active" : ""}" 
-                contenteditable="true" 
-                onblur="editBoardName(event, ${index})"
-                onclick="handleBoardClick(${index})"
-            >${board.name}</button>
+            <div class="board-item">
+                <button 
+                    class="board-tab ${board.activated ? "active" : ""}" 
+                    contenteditable="true" 
+                    onblur="editBoardName(event, ${index})"
+                    onclick="handleBoardClick(${index})"
+                >
+                ${board.name}
+                </button>
+                <button class="delete-board-btn" onclick="deleteBoard(${index})">X</button>
+            </div>
         `);
         // onblur: is triggered when a user finishes interacting with a contenteditable element
     });
     getActivatedBoard();
 }
+
+//delete the board and its notes if I clicked to delete it
+const deleteBoard = (index) => {
+    if (confirm(`Are you sure you want to delete the board "${boards[index].name}" and all its notes?`)) {
+        boards.splice(index, 1);
+        renderBoards();
+        renderCurrentBoardNotes();
+    }
+};
 
 // Wrapper to handle board click 
 const handleBoardClick = (index) => {
@@ -191,13 +205,19 @@ const handleBoardClick = (index) => {
 
 // Function to create new board and give it :  unique  id, creationDate, name : by default give it a name with this formate 'New Board()' 
 const createBoard = () => {
+    // Find the highest number in the existing board names
+    let maxNumber = 0;
 
-    // Get the number of board who has 'New Board' as a first part of their name (# of boards the user did not change their default name)
-    let numberOfBoardsWithNewBoardName = boards.filter(board => board.name.startsWith("New Board")).length;
+    // Loop through existing boards to extract the highest number
+    boards.forEach(board => {
+        const match = board.name.match(/New Board\((\d+)\)/); // Check for "New Board(x)" format
+        if (match) {
+            maxNumber = parseInt(match[1], 10); // Update maxNumber
+        }
+    });
 
-    /* Create new name for the board in this formate 'New Board()'and the number between brackets is given according to the 
-       number of already existing boards with 'New Board' name */
-    let newBoardName = `New Board${numberOfBoardsWithNewBoardName ? `(${numberOfBoardsWithNewBoardName})` : ""}`;
+    // Create a new name with the next number
+    const newBoardName = `New Board(${maxNumber + 1})`;
 
     const newBoard = {
         id: crypto.randomUUID(),
@@ -260,17 +280,14 @@ const initializeResizer = (note, index) => {
         const deltaHeight = event.clientY - originalMouseY;
         const maxDelta = Math.max(deltaWidth, deltaHeight);
 
-        // Calculate new width and height (maintain the note size within minimum dimensions)
+        // Calculate new width and height
         let newWidth = originalWidth + maxDelta;
         let newHeight = originalHeight + maxDelta;
 
-        // Prevent the note from exceeding the window's right or bottom boundary
-        newWidth = Math.min(newWidth, 400);
-        newHeight = Math.min(newHeight, 380);
-
-        // Ensure that the note is not too small
-        newWidth = Math.max(newWidth, 200);  // Minimum width
-        newHeight = Math.max(newHeight, 180); // Minimum height
+        // Restrict the new width of the note((maximum width(400 px) and Minimum width(200 px))
+        newWidth = Math.max(Math.min(newWidth, 400), 200);
+        // Restrict the new height of the note ((maximum width(380 px) and Minimum width(180 px))
+        newHeight = Math.max(Math.min(newHeight, 380), 180); // Minimum height
 
         // Apply the new width and height to the note
         note.style.width = `${newWidth}px`;
@@ -291,11 +308,6 @@ const initializeResizer = (note, index) => {
     const stopResize = () => {
         window.removeEventListener('mousemove', resize);
         window.removeEventListener('mouseup', stopResize);
-
-        // return the new dimensions of the note as an object
-        const newWidth = note.offsetWidth;
-        const newHeight = note.offsetHeight;
-        return { width: newWidth, height: newHeight };
     };
 
     // Attach a mousedown event to the resizer element
@@ -335,9 +347,15 @@ const initializeDragAndDrop = (note, index) => {
         let newLeft = event.clientX - offsetX;
         let newTop = event.clientY - offsetY;
 
-        // Restrict the note within the window's boundaries
-        newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - note.offsetWidth));
-        newTop = Math.max(8, Math.min(newTop, window.innerHeight - note.offsetHeight));
+        // Restrict the new position for the left (horizontal) axis
+        // Ensure that the left position doesn't go beyond 5px from the left edge of the screen
+        // and doesn't exceed 1280px from the left edge (e.g., right boundary of the screen).
+        newLeft = Math.max(5, Math.min(newLeft, 1280));
+
+        // Restrict the new position for the top (vertical) axis
+        // Ensure that the top position doesn't go below 8px from the top,
+        // and doesn't exceed 540px from the top (e.g., the bottom boundary of the screen).
+        newTop = Math.max(8, Math.min(newTop, 540));
 
         // Apply the new position to the note
         note.style.left = `${newLeft}px`;
