@@ -1,7 +1,11 @@
 const boardsElement = document.getElementById("boards");
 const notesContainerElement = document.getElementById("notes-container");
 
-const boards = [];
+let boards = [],notes = [];
+let archived = [];
+let arch = false;
+
+
 
 // Return the first activated board, if more than one is activated make them inactive, if not one is active return null
 const getActivatedBoard = () => {
@@ -29,12 +33,15 @@ const getActivatedBoard = () => {
 }
 
 const renderCurrentBoardNotes = () => {
+    arch = false;
     const currentBoard = getActivatedBoard();
     if (currentBoard) {
         const currentNotes = currentBoard.notes;
         notesContainerElement.innerHTML = "";
 
         currentNotes.forEach((note, index) => {
+            console.log(note);
+            
             if (!note.archived) {
                 notesContainerElement.insertAdjacentHTML('beforeend', `
                     <div class="sticky-note"
@@ -62,7 +69,7 @@ const renderCurrentBoardNotes = () => {
                                     <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, ${index})"></div>
                                 </div>
                             </div>
-                            <button class="delete-btn" onclick="deleteNote(${index})">X</button>
+                            <button class="delete-btn" onclick="deleteNote(${index},'${note.boardID}')">X</button>
                         </div>
                         <!-- Resizer element -->
                         <div class="resizer" style="background-color:${note.color}"></div>
@@ -80,7 +87,96 @@ const renderCurrentBoardNotes = () => {
         alert("Create new board");
     }
 }
+// >>>>>>>>>>> archive the noote in the archived notes ::: 
+// >>>>>>>>>>> warninig !!!!!!!!!! another ikmplementaion for the index in noteObject ,,take it as the UUID 
+const deleteNote = (index,currentBoardID) => {
+    const currentBoard = boards.find(board => board.id === currentBoardID);
+    const currentBoardIdx = boards.findIndex(board => board.id === currentBoardID);
 
+    const newArchivedNote = currentBoard.notes[index];
+    console.log(currentBoardID,newArchivedNote);
+
+    // >>>>>>>>>>> do this >> put the archive flag to true then render all    
+    // >>>>>>>>>>> just render the notes again without the archived ones::::  
+    newArchivedNote.archived = true;
+    
+    boards[currentBoardIdx].notes[index] = newArchivedNote;
+    archived.push(newArchivedNote);
+    renderCurrentBoardNotes();
+}
+
+// const returnNote = (index,currentBoardID) => {
+//     const currentBoard = boards.find(board => board.id === currentBoardID);
+//     const currentBoardIdx = boards.findIndex(board => board.id === currentBoardID);
+
+//     const newReturnedNote = currentBoard.notes[index];
+//     console.log(currentBoardID,newReturnedNote);
+
+//     // >>>>>>>>>>> do this >> put the archive flag to true then render all    
+//     // >>>>>>>>>>> just render the notes again without the archived ones::::  
+//     newReturnedNote.archived = false;
+    
+//     boards[currentBoardIdx].notes[index] = newReturnedNote;
+//     //archived.push(newReturnedNote);
+//     archived = archived.filter(note => note.id = newReturnedNote.id);
+//     renderArchivednotes();
+// }
+const renderArchivednotes = ()=>{
+    arch = true; 
+    // render all boards as not activated 
+    // make sure when you delete a specific board delete all its notes from archived and notes arrays 
+    // another thing make a new button to return the note to its home board 
+
+    boards.forEach(element => {
+        
+        element.activated = false;
+        console.log(element.activated);
+    });
+    notesContainerElement.innerHTML = "";   
+    renderBoards();
+    
+    archived.forEach((note, index) => {
+        notesContainerElement.insertAdjacentHTML('beforeend', `
+            <div class="sticky-note"
+                style="
+                    position: absolute;
+                    top: ${note.positionY}px;
+                    left: ${note.positionX}px;
+                    background-color: ${note.color};
+                    width: ${note.width}px;
+                    height: ${note.height}px;
+                "> 
+                <p class="note-text" 
+                    contenteditable="true" 
+                    ondblclick="this.focus()"
+                    onblur="editNoteContent(event, ${index})">
+                    ${note.content}
+                </p>
+                <div class="Bottom-elements">
+                    <p class="note-date">${note.createdDate}</p>
+                    <div class="note-colors"> 
+                        <div class="color-options">
+                            <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event, ${index})"></div>
+                            <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, ${index})"></div>
+                            <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, ${index})"></div>
+                            <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, ${index})"></div>
+                        </div>
+                    </div>
+                        <button style = "background-color:green" class="delete-btn" onclick="returnNote(${index},'${note.boardID}')">✔</button>
+
+                </div>
+                <!-- Resizer element -->
+                <div class="resizer" style="background-color:${note.color}"></div>
+            </div>
+        `);
+        // onblur: is triggered when a user finishes interacting with a contenteditable element
+
+        const noteElement = notesContainerElement.lastElementChild;
+        initializeResizer(noteElement, index);
+        initializeDragAndDrop(noteElement, index);
+        
+    });
+}
 // Change the background color of a sticky note based on the clicked color circle.
 const changeNoteColor = (event, index) => {
 
@@ -185,11 +281,19 @@ const renderBoards = () => {
         `);
         // onblur: is triggered when a user finishes interacting with a contenteditable element
     });
-    getActivatedBoard();
+    if(!arch) getActivatedBoard();
 }
 
 //delete the board and its notes if I clicked to delete it
 const deleteBoard = (index) => {
+    /// delete all the notes from the archived 
+    const deletedboardUUID = boards[index].id;
+
+
+
+    // >>>>>>>>>>>>>> modify the archived --> remove all the archived notes for the deleted board 
+    archived = archived.filter(note => note.boardID !== deletedboardUUID);
+
     if (confirm(`Are you sure you want to delete the board "${boards[index].name}" and all its notes?`)) {
         boards.splice(index, 1);
         renderBoards();
@@ -202,6 +306,8 @@ const handleBoardClick = (index) => {
     // Delay the activation to allow `onblur` to complete
     setTimeout(() => activateBoard(index), 300);
 };
+
+
 
 // Function to create new board and give it :  unique  id, creationDate, name : by default give it a name with this formate 'New Board()' 
 const createBoard = () => {
@@ -402,8 +508,12 @@ const createStickyNote = () => {
     const year = currentDate.getFullYear();
     const formattedDate = `${month} ${day}, ${year}`;
 
-    // Create a sticky note object
+
+    const currentBoard = getActivatedBoard();
+    //const currentBoardID = boards.findIndex(board => board.id = currentBoard.id);
     const noteObject = {
+        id : crypto.randomUUID(),
+        boardID : currentBoard.id,
         content: '',
         color: color,
         width: width,
@@ -453,8 +563,9 @@ const createStickyNote = () => {
     // initializeResizer(stickyNoteElement);
     // initializeDragAndDrop(stickyNoteElement);
 
-    const currentBoard = getActivatedBoard();
+    // const currentBoard = getActivatedBoard();
     if (currentBoard) {
+        notes.push(noteObject);
         currentBoard.notes.push(noteObject);
         renderCurrentBoardNotes();
         // console.log(noteObject);
