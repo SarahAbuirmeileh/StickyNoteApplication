@@ -105,22 +105,24 @@ const deleteNote = (index,currentBoardID) => {
     renderCurrentBoardNotes();
 }
 
-// const returnNote = (index,currentBoardID) => {
-//     const currentBoard = boards.find(board => board.id === currentBoardID);
-//     const currentBoardIdx = boards.findIndex(board => board.id === currentBoardID);
+const returnNote = (noteID,currentBoardID) => {
+    const currentBoard = boards.find(board => board.id === currentBoardID);
+    const currentBoardIdx = boards.findIndex(board => board.id === currentBoardID);
 
-//     const newReturnedNote = currentBoard.notes[index];
-//     console.log(currentBoardID,newReturnedNote);
+    const index = boards[currentBoardIdx].notes.findIndex(note => note.id === noteID);
 
-//     // >>>>>>>>>>> do this >> put the archive flag to true then render all    
-//     // >>>>>>>>>>> just render the notes again without the archived ones::::  
-//     newReturnedNote.archived = false;
+    const newReturnedNote = currentBoard.notes[index];
+    console.log(currentBoardID,newReturnedNote);
+
+    // >>>>>>>>>>> do this >> put the archive flag to false then render all    
+    // >>>>>>>>>>> just render the notes again without the returned ones::::  
+    newReturnedNote.archived = false;
     
-//     boards[currentBoardIdx].notes[index] = newReturnedNote;
-//     //archived.push(newReturnedNote);
-//     archived = archived.filter(note => note.id = newReturnedNote.id);
-//     renderArchivednotes();
-// }
+    boards[currentBoardIdx].notes[index] = newReturnedNote;
+    archived = archived.filter(note => note.id !== newReturnedNote.id);
+    console.log( boards[currentBoardIdx].notes[index]);
+    renderArchivednotes();
+}
 const renderArchivednotes = ()=>{
     arch = true; 
     // render all boards as not activated 
@@ -132,6 +134,7 @@ const renderArchivednotes = ()=>{
         element.activated = false;
         console.log(element.activated);
     });
+    console.log(archived.length);
     notesContainerElement.innerHTML = "";   
     renderBoards();
     
@@ -162,7 +165,7 @@ const renderArchivednotes = ()=>{
                             <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, ${index})"></div>
                         </div>
                     </div>
-                        <button style = "background-color:green" class="delete-btn" onclick="returnNote(${index},'${note.boardID}')">✔</button>
+                        <button style = "background-color:green" class="delete-btn" onclick="returnNote('${note.id}','${note.boardID}')">✔</button>
 
                 </div>
                 <!-- Resizer element -->
