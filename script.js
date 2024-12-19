@@ -2,7 +2,6 @@ const boardsElement = document.getElementById("boards");
 const notesContainerElement = document.getElementById("notes-container");
 
 let boards = [],notes = [];
-let archived = []; /// no need for it 
 let arch = false;
 
 
@@ -33,6 +32,7 @@ const getActivatedBoard = () => {
 }
 
 const renderCurrentBoardNotes = () => {
+    notesContainerElement.innerHTML = "";
     arch = false;
     const currentBoard = getActivatedBoard();
     if (currentBoard) {
@@ -119,7 +119,7 @@ const returnNote = (noteID,currentBoardID) => {
     newReturnedNote.archived = false;
     
     boards[currentBoardIdx].notes[index] = newReturnedNote;
-    archived = archived.filter(note => note.id !== newReturnedNote.id);
+    //archived = archived.filter(note => note.id !== newReturnedNote.id);
     console.log( boards[currentBoardIdx].notes[index]);
     renderArchivednotes();
 }
@@ -134,7 +134,6 @@ const renderArchivednotes = ()=>{
         element.activated = false;
         console.log(element.activated);
     });
-    console.log(archived.length);
     notesContainerElement.innerHTML = "";   
     renderBoards();
     boards.forEach((board,index) => {
@@ -347,9 +346,10 @@ const deleteBoard = (index) => {
 
 
     // >>>>>>>>>>>>>> modify the archived --> remove all the archived notes for the deleted board 
-    archived = archived.filter(note => note.boardID !== deletedboardUUID);
+    //archived = archived.filter(note => note.boardID !== deletedboardUUID);
 
     if (confirm(`Are you sure you want to delete the board "${boards[index].name}" and all its notes?`)) {
+        boards[index].notes = [];
         boards.splice(index, 1);
         renderBoards();
         renderCurrentBoardNotes();
