@@ -2,7 +2,7 @@ const boardsElement = document.getElementById("boards");
 const notesContainerElement = document.getElementById("notes-container");
 
 let boards = [],notes = [];
-let archived = [];
+let archived = []; /// no need for it 
 let arch = false;
 
 
@@ -63,10 +63,10 @@ const renderCurrentBoardNotes = () => {
                             <p class="note-date">${note.createdDate}</p>
                             <div class="note-colors"> 
                                 <div class="color-options">
-                                    <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event, ${index})"></div>
-                                    <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, ${index})"></div>
-                                    <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, ${index})"></div>
-                                    <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, ${index})"></div>
+                                    <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+                                    <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+                                    <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+                                    <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
                                 </div>
                             </div>
                             <button class="delete-btn" onclick="deleteNote(${index},'${note.boardID}')">X</button>
@@ -101,7 +101,7 @@ const deleteNote = (index,currentBoardID) => {
     newArchivedNote.archived = true;
     
     boards[currentBoardIdx].notes[index] = newArchivedNote;
-    archived.push(newArchivedNote);
+    // archived.push(newArchivedNote);
     renderCurrentBoardNotes();
 }
 
@@ -137,52 +137,97 @@ const renderArchivednotes = ()=>{
     console.log(archived.length);
     notesContainerElement.innerHTML = "";   
     renderBoards();
-    
-    archived.forEach((note, index) => {
-        notesContainerElement.insertAdjacentHTML('beforeend', `
-            <div class="sticky-note"
-                style="
-                    position: absolute;
-                    top: ${note.positionY}px;
-                    left: ${note.positionX}px;
-                    background-color: ${note.color};
-                    width: ${note.width}px;
-                    height: ${note.height}px;
-                "> 
-                <p class="note-text" 
-                    contenteditable="true" 
-                    ondblclick="this.focus()"
-                    onblur="editNoteContent(event, ${index})">
-                    ${note.content}
-                </p>
-                <div class="Bottom-elements">
-                    <p class="note-date">${note.createdDate}</p>
-                    <div class="note-colors"> 
-                        <div class="color-options">
-                            <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event, ${index})"></div>
-                            <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, ${index})"></div>
-                            <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, ${index})"></div>
-                            <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, ${index})"></div>
-                        </div>
-                    </div>
-                        <button style = "background-color:green" class="delete-btn" onclick="returnNote('${note.id}','${note.boardID}')">✔</button>
-
-                </div>
-                <!-- Resizer element -->
-                <div class="resizer" style="background-color:${note.color}"></div>
-            </div>
-        `);
-        // onblur: is triggered when a user finishes interacting with a contenteditable element
-
-        const noteElement = notesContainerElement.lastElementChild;
-        initializeResizer(noteElement, index);
-        initializeDragAndDrop(noteElement, index);
+    boards.forEach((board,index) => {
+        board.notes.forEach((note,index) => {
+            if(note.archived){
+                notesContainerElement.insertAdjacentHTML('beforeend', `
+                    <div class="sticky-note"
+                        style="
+                            position: absolute;
+                            top: ${note.positionY}px;
+                            left: ${note.positionX}px;
+                            background-color: ${note.color};
+                            width: ${note.width}px;
+                            height: ${note.height}px;
+                        "> 
+                        <p class="note-text" 
+                            contenteditable="true" 
+                            ondblclick="this.focus()"
+                            onblur="editNoteContent(event, ${index})">
+                            ${note.content}
+                        </p>
+                        <div class="Bottom-elements">
+                            <p class="note-date">${note.createdDate}</p>
+                            <div class="note-colors"> 
+                                <div class="color-options">
+                                    <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+                                    <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+                                    <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+                                    <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+                                </div>
+                            </div>
+                                <button style = "background-color:green" class="delete-btn" onclick="returnNote('${note.id}','${note.boardID}')">✔</button>
         
-    });
+                        </div>
+                        <!-- Resizer element -->
+                        <div class="resizer" style="background-color:${note.color}"></div>
+                    </div>
+                `);
+                // onblur: is triggered when a user finishes interacting with a contenteditable element
+        
+                const noteElement = notesContainerElement.lastElementChild;
+                initializeResizer(noteElement, index);
+                initializeDragAndDrop(noteElement, index);
+                
+            }
+        })
+    })
+    // archived.forEach((note, index) => {
+    //     notesContainerElement.insertAdjacentHTML('beforeend', `
+    //         <div class="sticky-note"
+    //             style="
+    //                 position: absolute;
+    //                 top: ${note.positionY}px;
+    //                 left: ${note.positionX}px;
+    //                 background-color: ${note.color};
+    //                 width: ${note.width}px;
+    //                 height: ${note.height}px;
+    //             "> 
+    //             <p class="note-text" 
+    //                 contenteditable="true" 
+    //                 ondblclick="this.focus()"
+    //                 onblur="editNoteContent(event, ${index})">
+    //                 ${note.content}
+    //             </p>
+    //             <div class="Bottom-elements">
+    //                 <p class="note-date">${note.createdDate}</p>
+    //                 <div class="note-colors"> 
+    //                     <div class="color-options">
+    //                         <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+    //                         <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+    //                         <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+    //                         <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+    //                     </div>
+    //                 </div>
+    //                     <button style = "background-color:green" class="delete-btn" onclick="returnNote('${note.id}','${note.boardID}')">✔</button>
+
+    //             </div>
+    //             <!-- Resizer element -->
+    //             <div class="resizer" style="background-color:${note.color}"></div>
+    //         </div>
+    //     `);
+    //     // onblur: is triggered when a user finishes interacting with a contenteditable element
+
+    //     const noteElement = notesContainerElement.lastElementChild;
+    //     initializeResizer(noteElement, index);
+    //     initializeDragAndDrop(noteElement, index);
+        
+    // });
 }
 // Change the background color of a sticky note based on the clicked color circle.
-const changeNoteColor = (event, index) => {
+const changeNoteColor = (event, noteID, boardID) => {
 
+    console.log(noteID,boardID);
     // Define a mapping of color names to their respective hex color values
     const colorValue = {
         gray: '#eee',
@@ -198,8 +243,12 @@ const changeNoteColor = (event, index) => {
     // Get sticky note whose background color needs to change
     // const note = colorCircle.closest('.sticky-note');
 
-    const currentBoard = getActivatedBoard();
-    if (currentBoard) {
+    // const currentBoard = getActivatedBoard();
+    const currentBoard = boards.find(board => board.id === boardID);
+    console.log(currentBoard);
+    const index = currentBoard.notes.findIndex(note => note.id === noteID);
+    
+    if (currentBoard) {  
         // If a sticky note is found and a valid color is provided -> change the color
         if (color) {
             currentBoard.notes[index].color = colorValue[color];
@@ -216,7 +265,10 @@ const changeNoteColor = (event, index) => {
     //     resizer.style.backgroundColor = colorValue[color];
     // }
 
-    renderCurrentBoardNotes();
+    if(arch){
+        renderArchivednotes();
+    }
+    else renderCurrentBoardNotes();
 };
 
 // Function to update the "Edited On" date when the note content changes
