@@ -192,6 +192,13 @@ const renderBoards = () => {
 const deleteBoard = (index) => {
     if (confirm(`Are you sure you want to delete the board "${boards[index].name}" and all its notes?`)) {
         boards.splice(index, 1);
+        // If there is more than one board activate the previous board of the deleted one
+        if(index >= 1){
+            activateBoard(index - 1);
+        }else if (boards.length > 0){
+            // If we want to delete the first board (no previous), if these is at least one board activate the first board after deletion 
+            activateBoard(0);
+        }
         renderBoards();
         renderCurrentBoardNotes();
     }
@@ -229,7 +236,7 @@ const createBoard = () => {
 
     boards.push(newBoard);
     // Activate the last added board
-    activateBoard(boards.length-1);
+    activateBoard(boards.length - 1);
     renderBoards();
     // console.log(boards);
 }
