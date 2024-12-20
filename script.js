@@ -176,7 +176,7 @@ const renderBoards = () => {
                     class="board-tab ${board.activated ? "active" : ""}" 
                     contenteditable="true" 
                     onblur="editBoardName(event, ${index})"
-                    onclick="handleBoardClick(${index})"
+                    onclick="activateBoard(${index})"
                 >
                 ${board.name}
                 </button>
