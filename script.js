@@ -228,6 +228,8 @@ const createBoard = () => {
     }
 
     boards.push(newBoard);
+    // Activate the last added board
+    activateBoard(boards.length-1);
     renderBoards();
     // console.log(boards);
 }
