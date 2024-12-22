@@ -509,10 +509,13 @@ const editNoteContent = (event, index) => {
     // console.log(`update note content to: ${newContent}`);
 };
 
+
+// Function to store the current data (boards and notes in local storage with a value of data)
 const storeData = () => {
     localStorage.setItem('data', JSON.stringify(boards));
 }
 
+// To get the last added data from local storage 
 const readData = () => {
     try {
         const strJSON = localStorage.getItem('data');
@@ -522,7 +525,10 @@ const readData = () => {
     }
 }
 
+// Get the data from local storage
 const boards = readData();
 
+
+// Initial rendering for board and notes after getting them from local storage
 renderBoards();
 renderCurrentBoardNotes();
