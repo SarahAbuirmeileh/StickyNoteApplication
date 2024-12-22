@@ -150,7 +150,7 @@ const renderArchivednotes = ()=>{
                             height: ${note.height}px;
                         "> 
                         <p class="note-text" 
-                            contenteditable="true" 
+                            contenteditable="false" 
                             ondblclick="this.focus()"
                             onblur="editNoteContent(event, ${index})">
                             ${note.content}
@@ -519,23 +519,28 @@ const createStickyNote = () => {
     const year = currentDate.getFullYear();
     const formattedDate = `${month} ${day}, ${year}`;
 
-
     const currentBoard = getActivatedBoard();
     if(!currentBoard){
         console.log('No boards exists');
         alert("Create new board");
         return;
     }
+    // check if rhis mobile/tablet or not (after searching its max 768 px in tablets and phones)
+    //const isMobile = window.innerWidth <= 768;
+    
     //const currentBoardID = boards.findIndex(board => board.id = currentBoard.id);
     const noteObject = {
         id : crypto.randomUUID(),
         boardID : currentBoard.id,
         content: '',
         color: color,
-        width: width,
+        //width: isMobile ? '100%' : width, 
+        width : width,
         height: height,
-        positionX: randomX,
-        positionY: randomY,
+        // positionX: isMobile ? 0 : randomX, 
+        // positionY: currentBoard.notes.length*height, 
+        positionX : randomX,
+        positionY : randomY,
         createdDate: `Added On: ${formattedDate}`,
         archived: false
     };
@@ -590,6 +595,7 @@ const createStickyNote = () => {
         alert("Create new board")
     }
 };
+
 
 const addButton = document.querySelector('.add-btn');
 addButton.addEventListener('click', () => {
