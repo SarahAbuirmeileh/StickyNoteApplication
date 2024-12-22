@@ -1,8 +1,6 @@
 const boardsElement = document.getElementById("boards");
 const notesContainerElement = document.getElementById("notes-container");
 
-const boards = [];
-
 // Return the first activated board, if more than one is activated make them inactive, if not one is active return null
 const getActivatedBoard = () => {
     // Get all activated boards
@@ -117,6 +115,7 @@ const changeNoteColor = (event, index) => {
     //     resizer.style.backgroundColor = colorValue[color];
     // }
 
+    storeData();
     renderCurrentBoardNotes();
 };
 
@@ -149,6 +148,7 @@ const changeDate = (index) => {
         console.log('No boards exists');
         alert("Create new board")
     }
+    storeData();
     renderCurrentBoardNotes();
 };
 
@@ -199,6 +199,7 @@ const deleteBoard = (index) => {
             // If we want to delete the first board (no previous), if these is at least one board activate the first board after deletion 
             activateBoard(0);
         }
+        storeData();
         renderBoards();
         renderCurrentBoardNotes();
     }
@@ -237,6 +238,7 @@ const createBoard = () => {
     boards.push(newBoard);
     // Activate the last added board
     activateBoard(boards.length - 1);
+    storeData();
     renderBoards();
     // console.log(boards);
 }
@@ -255,6 +257,7 @@ const editBoardName = (event, index) => {
     } else {
         alert("Board name cannot be empty!")
     }
+    storeData();
     activateBoard(index);
 };
 
@@ -267,6 +270,7 @@ const activateBoard = (index) => {
     boards[index].activated = true;
 
     // To see the results
+    storeData();
     renderBoards();
     renderCurrentBoardNotes();
 };
@@ -306,6 +310,7 @@ const initializeResizer = (note, index) => {
         if (currentBoard) {
             currentBoard.notes[index].width = newWidth;
             currentBoard.notes[index].height = newHeight;
+            storeData();
             renderCurrentBoardNotes();
         } else {
             console.log('No boards exists');
@@ -374,6 +379,7 @@ const initializeDragAndDrop = (note, index) => {
         if (currentBoard) {
             currentBoard.notes[index].positionX = newLeft;
             currentBoard.notes[index].positionY = newTop;
+            storeData();
             renderCurrentBoardNotes();
         } else {
             console.log('No boards exists');
@@ -465,6 +471,7 @@ const createStickyNote = () => {
     const currentBoard = getActivatedBoard();
     if (currentBoard) {
         currentBoard.notes.push(noteObject);
+        storeData();
         renderCurrentBoardNotes();
         // console.log(noteObject);
     } else {
@@ -498,6 +505,30 @@ const editNoteContent = (event, index) => {
         console.log('No boards exists');
         alert("Create new board")
     }
-
+    storeData();
     // console.log(`update note content to: ${newContent}`);
 };
+
+
+// Function to store the current data (boards and notes in local storage with a value of data)
+const storeData = () => {
+    localStorage.setItem('data', JSON.stringify(boards));
+}
+
+// To get the last added data from local storage 
+const readData = () => {
+    try {
+        const strJSON = localStorage.getItem('data');
+        return strJSON === null ? [] : JSON.parse(strJSON);
+    } catch (error) {
+        return [];
+    }
+}
+
+// Get the data from local storage
+const boards = readData();
+
+
+// Initial rendering for board and notes after getting them from local storage
+renderBoards();
+renderCurrentBoardNotes();
