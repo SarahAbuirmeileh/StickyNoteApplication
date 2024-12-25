@@ -176,8 +176,8 @@ const renderBoards = () => {
             <div class="board-item">
                 <button 
                     class="board-tab ${board.activated ? "active" : ""}" 
-                    contenteditable="true" 
-                    onblur="editBoardName(event, ${index})"
+                    
+                    ondblclick="editBoardName(event, ${index})"
                     onclick="activateBoard(${index})"
                 >
                 ${board.name}
@@ -185,7 +185,8 @@ const renderBoards = () => {
                 <button class="delete-board-btn" onclick="deleteBoard(${index})">X</button>
             </div>
         `);
-        // onblur: is triggered when a user finishes interacting with a contenteditable element
+        //  contenteditable="true" 
+        //  onblur: is triggered when a user finishes interacting with a contenteditable element
     });
     getActivatedBoard();
 }
@@ -247,7 +248,9 @@ const createBoard = () => {
 
 // function to edit the board name 
 const editBoardName = (event, index) => {
-
+    /* This is the previous solution to edit the board name using contenteditable and onblur event, but 
+       it did not work due to the interference between events, so I changed it to use prompt
+       
     // Get the edited board name from the element (allowed since the board element is contenteditable)
     const newName = event.target.textContent.trim();
 
@@ -259,8 +262,28 @@ const editBoardName = (event, index) => {
     } else {
         alert("Board name cannot be empty!")
     }
+
     storeData();
     activateBoard(index);
+    */
+
+    // Prompt the user for the new board name
+    const newName = prompt(`Enter a new name for the board:`, boards[index].name);
+
+    // Check if the user provided a valid name
+    if (newName && newName.trim()) {
+        // Update the board name in the boards array
+        boards[index].name = newName.trim();
+
+        // Store the updated data
+        storeData();
+
+        // Activate the updated board
+        activateBoard(index);
+    } else {
+        // Alert if the name is invalid
+        alert("Board name cannot be empty!");
+    }
 };
 
 // Activate board when click on it 
