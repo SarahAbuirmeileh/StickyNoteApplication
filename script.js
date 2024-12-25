@@ -74,8 +74,10 @@ const renderCurrentBoardNotes = () => {
             }
         });
     } else {
+        // No boards -> no notes
+        notesContainerElement.innerHTML = "";
         console.log('No boards exists');
-        alert("Create new board");
+        // alert("Create new board");
     }
 }
 
