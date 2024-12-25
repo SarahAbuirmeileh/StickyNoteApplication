@@ -625,3 +625,7 @@ const editNoteContent = (event, index) => {
 
     // console.log(`update note content to: ${newContent}`);
 };
+const toggleDropdownMenu = () => {
+    const dropdownMenu = document.getElementById('dropdown-menu');
+    dropdownMenu.classList.toggle('active');
+}
