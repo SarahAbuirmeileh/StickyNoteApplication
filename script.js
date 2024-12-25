@@ -193,9 +193,9 @@ const deleteBoard = (index) => {
     if (confirm(`Are you sure you want to delete the board "${boards[index].name}" and all its notes?`)) {
         boards.splice(index, 1);
         // If there is more than one board activate the previous board of the deleted one
-        if(index >= 1){
+        if (index >= 1) {
             activateBoard(index - 1);
-        }else if (boards.length > 0){
+        } else if (boards.length > 0) {
             // If we want to delete the first board (no previous), if these is at least one board activate the first board after deletion 
             activateBoard(0);
         }
@@ -357,19 +357,23 @@ const initializeDragAndDrop = (note, index) => {
 
     // Function to handle dragging
     const drag = (event) => {
+        // Get the note's dimensions
+        const noteWidth = note.offsetWidth;
+        const noteHeight = note.offsetHeight;
+
+        // Get the screen's dimensions
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
         // Calculate the new position of the note
         let newLeft = event.clientX - offsetX;
         let newTop = event.clientY - offsetY;
 
         // Restrict the new position for the left (horizontal) axis
-        // Ensure that the left position doesn't go beyond 5px from the left edge of the screen
-        // and doesn't exceed 1280px from the left edge (e.g., right boundary of the screen).
-        newLeft = Math.max(5, Math.min(newLeft, 1280));
+        newLeft = Math.max(5, Math.min(newLeft, screenWidth - noteWidth));
 
         // Restrict the new position for the top (vertical) axis
-        // Ensure that the top position doesn't go below 8px from the top,
-        // and doesn't exceed 540px from the top (e.g., the bottom boundary of the screen).
-        newTop = Math.max(8, Math.min(newTop, 540));
+        newTop = Math.max(8, Math.min(newTop, screenHeight - noteHeight));
 
         // Apply the new position to the note
         note.style.left = `${newLeft}px`;
@@ -480,12 +484,6 @@ const createStickyNote = () => {
     }
 };
 
-const addButton = document.querySelector('.add-btn');
-addButton.addEventListener('click', () => {
-    createStickyNote();
-});
-
-
 // function to edit the content of a note 
 const editNoteContent = (event, index) => {
 
@@ -532,3 +530,9 @@ const boards = readData();
 // Initial rendering for board and notes after getting them from local storage
 renderBoards();
 renderCurrentBoardNotes();
+
+//Function to display the contents of the dropdown menu
+const toggleDropdownMenu = () => {
+    const dropdownMenu = document.getElementById('dropdown-menu');
+    dropdownMenu.classList.toggle('active');
+}

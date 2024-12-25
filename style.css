@@ -209,12 +209,12 @@ body {
     }
 
     .search-bar {
-        width: 45vw;
+        width: 50vw;
     }
 
     .nav-right {
         margin-right: 0px;
-        gap: 148px;
+        gap: 130px;
     }
 }
 
@@ -224,7 +224,7 @@ body {
     }
 
     .nav-right {
-        gap: 45px;
+        gap: 55px;
     }
 }
 
