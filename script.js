@@ -1,5 +1,6 @@
 const boardsElement = document.getElementById("boards");
 const notesContainerElement = document.getElementById("notes-container");
+const searchBar = document.getElementById('search-bar');
 
 const boards = [];
 
@@ -152,7 +153,6 @@ const renderCurrentBoardNotes = (searchKeyword = "") => {
 };
 
 // Attach event listener to the search bar
-const searchBar = document.getElementById('search-bar');
 searchBar.addEventListener('input', (event) => searchNotes(event.target.value));
 
 // Change the background color of a sticky note based on the clicked color circle.
