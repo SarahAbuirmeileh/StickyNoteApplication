@@ -26,7 +26,17 @@
       <div class="actions">
         <button class="archived-btn"><i class="fa-solid fa-trash"></i>Archived</button>
         <button class="new-board-btn" onclick="createBoard()">New Board</button>
-        <button class="add-btn">+</button>
+        <button class="add-btn" onclick="createStickyNote()"><i class="fa-solid fa-plus"></i></button>
+
+        <button class="menu-toggle" onclick="toggleDropdownMenu()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="dropdown-menu" id="dropdown-menu">
+          <button class="add-btnn" onclick="createStickyNote()"><i class="fa-solid fa-plus"></i>New Note</button>
+          <button class="new-board-btn" onclick="createBoard()"><i class="fa-solid fa-plus"></i>New Board</button>
+          <button class="archived-btn"><i class="fa-solid fa-trash"></i>Archived</button>
+        </div>
       </div>
     </div>
   </nav>
