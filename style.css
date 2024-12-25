@@ -28,7 +28,6 @@ body {
 .nav-right {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
     gap: 40px;
     margin-right: 10px;
     flex-wrap: nowrap;
@@ -105,10 +104,10 @@ body {
 .add-btn {
     background-color: #67BE20;
     color: white;
-    font-size: 16px;
+    font-size: 11px;
     font-weight: 700;
     width: 32px;
-    height: 31px;
+    height: 32px;
     border-radius: 100%;
     cursor: pointer;
     border: 1px solid #ccc;
@@ -117,10 +116,118 @@ body {
     transition: 0.5s;
 }
 
+.add-btn .fa-plus {
+    margin-right: 0px;
+    margin-top: 4px;
+}
+
 .add-btn:hover {
     background-color: #49900e;
     font-weight: 900;
 }
+
+/* DropDown List */
+.fa-bars {
+    font-size: 30px;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #050505;
+    padding: 5px;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 44px;
+    right: 7px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    box-shadow: 0px 1px 7px rgba(168, 168, 168);
+    z-index: 1000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 12px;
+}
+
+.dropdown-menu button {
+    width: 100%;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.dropdown-menu .add-btnn {
+    background-color: #67BE20;
+    color: white;
+    font-size: 13.5px;
+    font-weight: 500;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: 0.5s;
+}
+
+.dropdown-menu .add-btnn:hover {
+    color: #67BE20;
+    background-color: white;
+}
+
+.fa-plus {
+    margin-right: 5px;
+}
+
+@media screen and (max-width: 1200px) {
+    .nav-right {
+        gap: 25px;
+    }
+
+    .search-bar {
+        width: 25vw;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .actions>.new-board-btn,
+    .actions>.add-btn,
+    .actions>.archived-btn {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .dropdown-menu.active {
+        display: flex;
+    }
+
+    .search-bar {
+        width: 45vw;
+    }
+
+    .nav-right {
+        margin-right: 0px;
+        gap: 148px;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-bar {
+        width: 54vw;
+    }
+
+    .nav-right {
+        gap: 45px;
+    }
+}
+
 
 .nav-left {
     display: flex;
