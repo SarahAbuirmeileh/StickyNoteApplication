@@ -221,7 +221,7 @@ body {
         gap: 130px;
     }
     .navbar {
-        height : 90px;
+        height : 75px;
         flex-direction: column;
     }
     .nav-right{
