@@ -2,8 +2,6 @@ const boardsElement = document.getElementById("boards");
 const notesContainerElement = document.getElementById("notes-container");
 const searchBar = document.getElementById('search-bar');
 
-const boards = [];
-
 // Return the first activated board, if more than one is activated make them inactive, if not one is active return null
 const getActivatedBoard = () => {
     // Get all activated boards
@@ -147,8 +145,10 @@ const renderCurrentBoardNotes = (searchKeyword = "") => {
             }
         });
     } else {
-        console.log('No boards exist');
-        alert("Create a new board");
+        // No boards -> no notes
+        notesContainerElement.innerHTML = "";
+        console.log('No boards exists');
+        // alert("Create new board");
     }
 };
 
@@ -191,6 +191,7 @@ const changeNoteColor = (event, index) => {
     //     resizer.style.backgroundColor = colorValue[color];
     // }
 
+    storeData();
     renderCurrentBoardNotes();
 };
 
@@ -223,6 +224,7 @@ const changeDate = (index) => {
         console.log('No boards exists');
         alert("Create new board")
     }
+    storeData();
     renderCurrentBoardNotes();
 };
 
@@ -248,16 +250,17 @@ const renderBoards = () => {
             <div class="board-item">
                 <button 
                     class="board-tab ${board.activated ? "active" : ""}" 
-                    contenteditable="true" 
-                    onblur="editBoardName(event, ${index})"
-                    onclick="handleBoardClick(${index})"
+                    
+                    ondblclick="editBoardName(event, ${index})"
+                    onclick="activateBoard(${index})"
                 >
                 ${board.name}
                 </button>
                 <button class="delete-board-btn" onclick="deleteBoard(${index})">X</button>
             </div>
         `);
-        // onblur: is triggered when a user finishes interacting with a contenteditable element
+        //  contenteditable="true" 
+        //  onblur: is triggered when a user finishes interacting with a contenteditable element
     });
     getActivatedBoard();
 }
@@ -266,6 +269,14 @@ const renderBoards = () => {
 const deleteBoard = (index) => {
     if (confirm(`Are you sure you want to delete the board "${boards[index].name}" and all its notes?`)) {
         boards.splice(index, 1);
+        // If there is more than one board activate the previous board of the deleted one
+        if (index >= 1) {
+            activateBoard(index - 1);
+        } else if (boards.length > 0) {
+            // If we want to delete the first board (no previous), if these is at least one board activate the first board after deletion 
+            activateBoard(0);
+        }
+        storeData();
         renderBoards();
         renderCurrentBoardNotes();
     }
@@ -302,13 +313,18 @@ const createBoard = () => {
     }
 
     boards.push(newBoard);
+    // Activate the last added board
+    activateBoard(boards.length - 1);
+    storeData();
     renderBoards();
     // console.log(boards);
 }
 
 // function to edit the board name 
 const editBoardName = (event, index) => {
-
+    /* This is the previous solution to edit the board name using contenteditable and onblur event, but 
+       it did not work due to the interference between events, so I changed it to use prompt
+       
     // Get the edited board name from the element (allowed since the board element is contenteditable)
     const newName = event.target.textContent.trim();
 
@@ -320,7 +336,28 @@ const editBoardName = (event, index) => {
     } else {
         alert("Board name cannot be empty!")
     }
+
+    storeData();
     activateBoard(index);
+    */
+
+    // Prompt the user for the new board name
+    const newName = prompt(`Enter a new name for the board:`, boards[index].name);
+
+    // Check if the user provided a valid name
+    if (newName && newName.trim()) {
+        // Update the board name in the boards array
+        boards[index].name = newName.trim();
+
+        // Store the updated data
+        storeData();
+
+        // Activate the updated board
+        activateBoard(index);
+    } else {
+        // Alert if the name is invalid
+        alert("Board name cannot be empty!");
+    }
 };
 
 // Activate board when click on it 
@@ -332,6 +369,7 @@ const activateBoard = (index) => {
     boards[index].activated = true;
 
     // To see the results
+    storeData();
     renderBoards();
     renderCurrentBoardNotes();
 };
@@ -371,6 +409,7 @@ const initializeResizer = (note, index) => {
         if (currentBoard) {
             currentBoard.notes[index].width = newWidth;
             currentBoard.notes[index].height = newHeight;
+            storeData();
             renderCurrentBoardNotes();
         } else {
             console.log('No boards exists');
@@ -417,19 +456,23 @@ const initializeDragAndDrop = (note, index) => {
 
     // Function to handle dragging
     const drag = (event) => {
+        // Get the note's dimensions
+        const noteWidth = note.offsetWidth;
+        const noteHeight = note.offsetHeight;
+
+        // Get the screen's dimensions
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
         // Calculate the new position of the note
         let newLeft = event.clientX - offsetX;
         let newTop = event.clientY - offsetY;
 
         // Restrict the new position for the left (horizontal) axis
-        // Ensure that the left position doesn't go beyond 5px from the left edge of the screen
-        // and doesn't exceed 1280px from the left edge (e.g., right boundary of the screen).
-        newLeft = Math.max(5, Math.min(newLeft, 1280));
+        newLeft = Math.max(5, Math.min(newLeft, screenWidth - noteWidth));
 
         // Restrict the new position for the top (vertical) axis
-        // Ensure that the top position doesn't go below 8px from the top,
-        // and doesn't exceed 540px from the top (e.g., the bottom boundary of the screen).
-        newTop = Math.max(8, Math.min(newTop, 540));
+        newTop = Math.max(8, Math.min(newTop, screenHeight - noteHeight));
 
         // Apply the new position to the note
         note.style.left = `${newLeft}px`;
@@ -439,6 +482,7 @@ const initializeDragAndDrop = (note, index) => {
         if (currentBoard) {
             currentBoard.notes[index].positionX = newLeft;
             currentBoard.notes[index].positionY = newTop;
+            storeData();
             renderCurrentBoardNotes();
         } else {
             console.log('No boards exists');
@@ -530,6 +574,7 @@ const createStickyNote = () => {
     const currentBoard = getActivatedBoard();
     if (currentBoard) {
         currentBoard.notes.push(noteObject);
+        storeData();
         renderCurrentBoardNotes();
         // console.log(noteObject);
     } else {
@@ -537,12 +582,6 @@ const createStickyNote = () => {
         alert("Create new board")
     }
 };
-
-const addButton = document.querySelector('.add-btn');
-addButton.addEventListener('click', () => {
-    createStickyNote();
-});
-
 
 // function to edit the content of a note 
 const editNoteContent = (event, index) => {
@@ -563,6 +602,5 @@ const editNoteContent = (event, index) => {
         console.log('No boards exists');
         alert("Create new board")
     }
-
-    // console.log(`update note content to: ${newContent}`);
 };
+
