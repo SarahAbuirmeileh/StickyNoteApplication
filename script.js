@@ -99,7 +99,17 @@ const renderCurrentBoardNotes = (searchKeyword = "") => {
     }
 };
 
+// Attach event listeners to the search bar when the user has an input and when he clicks 'Enter' 
 searchBar.addEventListener('input', (event) => searchNotes(event.target.value));
+searchBar.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        // Get the value from the search bar
+        const searchKeyword = searchBar.value.trim(); 
+
+    // Call the function with the search keyword
+        renderCurrentBoardNotes(searchKeyword); 
+    }
+});
 
 // Change the background color of a sticky note based on the clicked color circle.
 const changeNoteColor = (event, index) => {
