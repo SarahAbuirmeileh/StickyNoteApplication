@@ -1,5 +1,6 @@
 const boardsElement = document.getElementById("boards");
 const notesContainerElement = document.getElementById("notes-container");
+const searchBar = document.getElementById('search-bar');
 
 // Return the first activated board, if more than one is activated make them inactive, if not one is active return null
 const getActivatedBoard = () => {
@@ -26,7 +27,20 @@ const getActivatedBoard = () => {
     return activatedBoards ? activatedBoards[0] : null;
 }
 
-const renderCurrentBoardNotes = () => {
+// Function to highlight the matching text
+const highlightText = (text, keyword) => {
+    if (!keyword) return text;
+    const regex = new RegExp(`(${keyword})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+};
+
+// Search function
+const searchNotes = (keyword) => {
+    const searchInput = keyword.toLowerCase().trim();
+    renderCurrentBoardNotes(searchInput);
+};
+
+const renderCurrentBoardNotes = (searchKeyword = "") => {
     const currentBoard = getActivatedBoard();
     if (currentBoard) {
         const currentNotes = currentBoard.notes;
@@ -34,52 +48,68 @@ const renderCurrentBoardNotes = () => {
 
         currentNotes.forEach((note, index) => {
             if (!note.archived) {
-                notesContainerElement.insertAdjacentHTML('beforeend', `
-                    <div class="sticky-note"
-                        style="
-                            position: absolute;
-                            top: ${note.positionY}px;
-                            left: ${note.positionX}px;
-                            background-color: ${note.color};
-                            width: ${note.width}px;
-                            height: ${note.height}px;
-                        "> 
-                        <p class="note-text" 
-                           contenteditable="true" 
-                           ondblclick="this.focus()"
-                           onblur="editNoteContent(event, ${index})">
-                            ${note.content}
-                        </p>
-                        <div class="Bottom-elements">
-                            <p class="note-date">${note.createdDate}</p>
-                            <div class="note-colors"> 
-                                <div class="color-options">
-                                    <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event, ${index})"></div>
-                                    <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, ${index})"></div>
-                                    <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, ${index})"></div>
-                                    <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, ${index})"></div>
-                                </div>
-                            </div>
-                            <button class="delete-btn" onclick="deleteNote(${index})">X</button>
-                        </div>
-                        <!-- Resizer element -->
-                        <div class="resizer" style="background-color:${note.color}"></div>
-                    </div>
-                `);
-                // onblur: is triggered when a user finishes interacting with a contenteditable element
+                // Check if the search keyword matches the note content
+                const matchesSearch = note.content.toLowerCase().includes(searchKeyword);
 
-                const noteElement = notesContainerElement.lastElementChild;
-                initializeResizer(noteElement, index);
-                initializeDragAndDrop(noteElement, index);
+                if (matchesSearch || !searchKeyword) {
+                    notesContainerElement.insertAdjacentHTML('beforeend',
+                        `<div class="sticky-note"
+                            style="
+                                position: absolute;
+                                top: ${note.positionY}px;
+                                left: ${note.positionX}px;
+                                background-color: ${note.color};
+                                width: ${note.width}px;
+                                height: ${note.height}px;
+                            ">
+                            <p class="note-text" 
+                               contenteditable="true" 
+                               ondblclick="this.focus()"
+                               onblur="editNoteContent(event, ${index})">
+                               ${highlightText(note.content, searchKeyword)}
+                               
+                            </p>
+                            <div class="Bottom-elements">
+                                <p class="note-date">${note.createdDate}</p>
+                                <div class="note-colors"> 
+                                    <div class="color-options">
+                                        <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event, ${index})"></div>
+                                        <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, ${index})"></div>
+                                        <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, ${index})"></div>
+                                        <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, ${index})"></div>
+                                    </div>
+                                </div>
+                                <button class="delete-btn" onclick="deleteNote(${index})">X</button>
+                            </div>
+                            <div class="resizer" style="background-color:${note.color}"></div>
+                        </div>`
+                    );
+                     // onblur: is triggered when a user finishes interacting with a contenteditable element
+
+                    const noteElement = notesContainerElement.lastElementChild;
+                    initializeResizer(noteElement, index);
+                    initializeDragAndDrop(noteElement, index);
+                }
             }
         });
     } else {
         // No boards -> no notes
         notesContainerElement.innerHTML = "";
-        console.log('No boards exists');
-        // alert("Create new board");
+        console.log('No boards exist');
     }
-}
+};
+
+// Attach event listeners to the search bar when the user has an input and when he clicks 'Enter' 
+searchBar.addEventListener('input', (event) => searchNotes(event.target.value));
+searchBar.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        // Get the value from the search bar
+        const searchKeyword = searchBar.value.trim(); 
+
+    // Call the function with the search keyword
+        renderCurrentBoardNotes(searchKeyword); 
+    }
+});
 
 // Change the background color of a sticky note based on the clicked color circle.
 const changeNoteColor = (event, index) => {
