@@ -146,9 +146,6 @@ const changeNoteColor = (event, noteID, boardID) => {
     const colorCircle = event.target;
     const color = colorCircle.getAttribute('data-color');
 
-    // Get sticky note whose background color needs to change
-    // const note = colorCircle.closest('.sticky-note');
-
     // const currentBoard = getActivatedBoard();
     const currentBoard = boards.find(board => board.id === boardID);
     console.log(currentBoard);
@@ -164,12 +161,6 @@ const changeNoteColor = (event, noteID, boardID) => {
         console.log('No boards exists');
         alert("Create new board")
     }
-
-    // Update the resizer color to match the note color
-    // const resizer = note.querySelector('.resizer');
-    // if (resizer) {
-    //     resizer.style.backgroundColor = colorValue[color];
-    // }
 
     storeData();
     if (arch) {
@@ -191,15 +182,7 @@ const changeDate = (index) => {
     // Format the date as "Month dd, yyyy"
     const formattedDate = `${month} ${day}, ${year}`;
 
-    // Find the note's date paragraph (.note-date)
-    // const note = event.target.closest('.sticky-note');
-    // const noteDateElement = note.querySelector('.note-date');
-
-    // Update the text content of the .note-date paragraph to "Edited On: <current date>"
-    // if (noteDateElement) {
-    //     noteDateElement.textContent = `Edited On: ${formattedDate}`;
-    // }
-
+    // Get the current activated board to find it's note
     const currentBoard = getActivatedBoard();
     if (currentBoard) {
         currentBoard.notes[index].createdDate = `Edited On: ${formattedDate}`;
@@ -228,6 +211,7 @@ const changeDate = (index) => {
 const renderBoards = () => {
     boardsElement.innerHTML = "";
 
+    // Render each board from the boards array
     boards.forEach((board, index) => {
         boardsElement.insertAdjacentHTML('beforeend', `
             <div class="board-item">
@@ -312,20 +296,20 @@ const editBoardName = (event, index) => {
     /* This is the previous solution to edit the board name using contenteditable and onblur event, but 
        it did not work due to the interference between events, so I changed it to use prompt
        
-    // Get the edited board name from the element (allowed since the board element is contenteditable)
-    const newName = event.target.textContent.trim();
+        // Get the edited board name from the element (allowed since the board element is contenteditable)
+        const newName = event.target.textContent.trim();
 
-    // Change if the user write a name
-    if (newName) {
-        // Update the board name in the boards array
-        boards[index].name = newName;
-        // console.log(`update board name to: ${newName}`);
-    } else {
-        alert("Board name cannot be empty!")
-    }
+        // Change if the user write a name
+        if (newName) {
+            // Update the board name in the boards array
+            boards[index].name = newName;
+            // console.log(`update board name to: ${newName}`);
+        } else {
+            alert("Board name cannot be empty!")
+        }
 
-    storeData();
-    activateBoard(index);
+        storeData();
+        activateBoard(index);
     */
 
     // Prompt the user for the new board name
@@ -584,8 +568,8 @@ const readData = () => {
     }
 }
 
-// >>>>>>>>>>> archive the noote in the archived notes ::: 
-// >>>>>>>>>>> warninig !!!!!!!!!! another ikmplementaion for the index in noteObject ,,take it as the UUID 
+// >>>>>>>>>>> archive the note in the archived notes ::: 
+// >>>>>>>>>>> warning !!!!!!!!!! another implementation for the index in noteObject ,,take it as the UUID 
 const archiveNote = (index, currentBoardID) => {
     if (confirm(`Are you sure you want to archive this note ?`)) {
         const currentBoard = boards.find(board => board.id === currentBoardID);
