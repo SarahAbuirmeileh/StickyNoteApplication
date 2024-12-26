@@ -23,8 +23,11 @@ body {
     padding: 10px 20px;
     border-bottom: 1px solid #ddd;
     flex-wrap: nowrap;
+    
 }
-
+.nav-left {
+    order: 1;
+}
 .nav-right {
     display: flex;
     align-items: center;
@@ -33,6 +36,7 @@ body {
     flex-wrap: nowrap;
     overflow-x: hidden;
     flex-shrink: 0;
+    order: 2;
 }
 
 .search-container {
@@ -216,6 +220,17 @@ body {
         margin-right: 0px;
         gap: 130px;
     }
+    .navbar {
+        align-items: start;
+        height : 75px;
+        flex-direction: column;
+    }
+    .nav-right{
+        order: 1;
+    }
+    .nav-left {
+        order: 2;
+    }
 }
 
 @media (max-width: 480px) {
@@ -225,6 +240,17 @@ body {
 
     .nav-right {
         gap: 55px;
+    }
+    .navbar {
+        align-items: start;
+        height : 75px;
+        flex-direction: column;
+    }
+    .nav-right{
+        order: 1;
+    }
+    .nav-left {
+        order: 2;
     }
 }
 
@@ -250,7 +276,7 @@ body {
 }
 
 .board-tab {
-    position: relative;
+    position : relative;
     flex-grow: 1;
     background-color: #E4DEDE;
     border: 1px solid #E4DEDE;
@@ -302,7 +328,7 @@ body {
 }
 
 .board-container {
-    position: relative;
+    position: absolute;
 }
 
 /* sticky-note Styles */
