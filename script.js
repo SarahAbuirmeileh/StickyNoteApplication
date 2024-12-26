@@ -428,6 +428,9 @@ const initializeDragAndDrop = (note, index) => {
         offsetX = event.clientX - note.offsetLeft;
         offsetY = event.clientY - note.offsetTop;
 
+        // Increase z-index to bring the note to the front of other notes
+        note.style.zIndex = "1000";
+
         // Add event listeners for mousemove and mouseup
         window.addEventListener('mousemove', drag);
         window.addEventListener('mouseup', stopDrag);
@@ -462,15 +465,17 @@ const initializeDragAndDrop = (note, index) => {
             currentBoard.notes[index].positionX = newLeft;
             currentBoard.notes[index].positionY = newTop;
             storeData();
-            renderCurrentBoardNotes();
         } else {
-            console.log('No boards exists');
-            alert("Create new board")
+            console.log("No boards exist");
+            alert("Create a new board");
         }
     };
 
     // Function to stop dragging
     const stopDrag = () => {
+        // Reset the z-index to its initial value
+        note.style.zIndex = "auto";
+
         // Remove the mousemove and mouseup event listeners
         window.removeEventListener('mousemove', drag);
         window.removeEventListener('mouseup', stopDrag);
@@ -482,6 +487,7 @@ const initializeDragAndDrop = (note, index) => {
         startDrag(event);
     });
 };
+
 
 // Function to create a new sticky note
 const createStickyNote = () => {
