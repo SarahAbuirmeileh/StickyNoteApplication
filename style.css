@@ -330,6 +330,9 @@ body {
 
 .board-container {
     position: absolute;
+    width: 99vw;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 /* sticky-note Styles */
@@ -452,4 +455,16 @@ body {
     border-radius: 10%;
     margin: 2px;
     border-bottom-right-radius: 50%;
+}
+
+.no-notes-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: gray;
+    height: 95vh; /* Full viewport height */
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: auto;
 }
