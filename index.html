@@ -2,37 +2,64 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-    <title>Sticky notes</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <title>Sticky notes</title>
 </head>
 
 <body>
-    <!-- Navbar Section -->
-    <nav class="navbar">
-        <!-- Left side of the navbar: Board tabs -->
-        <div class="nav-left">
-            <button class="board-tab active">Board X</button>
-            <button class="board-tab">Board Y</button>
+  <!-- Navbar Section -->
+  <nav class="navbar">
+    <!-- Left side of the navbar: Board tabs -->
+    <div class="nav-left" id="boards">
+      <!-- <button class="board-tab active" contenteditable="true">Board X</button>
+      <button class="board-tab" oninput="editBoardName(event)">Board Y</button> -->
+    </div>
+    <!-- Right side of the navbar: Search and actions -->
+    <div class="nav-right">
+      <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" name="search-bar" id="search-bar" class="search-bar" placeholder="Search a note">
+      </div>
+      <div class="actions">
+        <button class="archived-btn" onclick="renderArchivednotes()"><i class="fa-solid fa-trash"></i>Archived</button>
+        <button class="new-board-btn" onclick="createBoard()">New Board</button>
+        <button class="add-btn" onclick="createStickyNote()"><i class="fa-solid fa-plus"></i></button>
+
+        <button class="menu-toggle" onclick="toggleDropdownMenu()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="dropdown-menu" id="dropdown-menu">
+          <button class="add-btnn" onclick="createStickyNote()"><i class="fa-solid fa-plus"></i>New Note</button>
+          <button class="new-board-btn" onclick="createBoard()"><i class="fa-solid fa-plus"></i>New Board</button>
+          <button class="archived-btn" onclick="renderArchivednotes()"><i class="fa-solid fa-trash"></i>Archived</button>
         </div>
-        <!-- Right side of the navbar: Search and actions -->
-        <div class="nav-right">
-            <div class="search-container">
-                <input type="search" name="search-bar" id="search-bar" class="search-bar"
-                    placeholder=" 🔎  Search a note">
-            </div>
-            <div class="actions">
-                <button class="archived-btn">🗑️ Archived</button>
-                <button class="new-board-btn">New Board</button>
-                <button class="add-btn">+</button>
-            </div>
+      </div>
+    </div>
+  </nav>
+  <main class="board-container" id="notes-container">
+    <!-- Just for testing the changeDate function -->
+    <!-- <div class="sticky-note" onclick="changeDate(event)" >   -->
+    <!-- <div class="sticky-note">
+      <p class="note-text">This is my first sticky notes in this project</p>
+      <p class="note-date">Added On: Nov 28, 2024</p>
+      <div class="note-colors">
+        <div class="color-options">
+          <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event)"></div>
+          <div class="color-circle red" data-color="red" onclick="changeNoteColor(event)"></div>
+          <div class="color-circle green" data-color="green" onclick="changeNoteColor(event)"></div>
+          <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event)"></div>
         </div>
-    </nav>
-    <main class="board-container">
-        <!-- Cards will go here -->
-    </main>
+        <button class="delete-btn">X</button>
+      </div>
+    </div> -->
+  </main>
+  <script src="script.js"></script>
+
 </body>
 
 </html>
