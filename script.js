@@ -59,7 +59,6 @@ const renderCurrentBoardNotes = (searchKeyword = "") => {
                     notesContainerElement.insertAdjacentHTML('beforeend',
                         `<div class="sticky-note"
                             style="
-                                position: absolute;
                                 top: ${note.positionY}px;
                                 left: ${note.positionX}px;
                                 background-color: ${note.color};
@@ -616,6 +615,7 @@ const archiveNote = (index,currentBoardID) => {
     newArchivedNote.activated =false;
 
     boards[currentBoardIdx].notes[index] = newArchivedNote;
+    storeData();
     renderCurrentBoardNotes();
 }
 const renderArchivednotes = ()=>{
@@ -666,7 +666,7 @@ const renderArchivednotes = ()=>{
             }
         })
     })
-
+    storeData();
 }
 const returnNote = (noteID,currentBoardID) => {
     const currentBoard = boards.find(board => board.id === currentBoardID);
@@ -680,6 +680,7 @@ const returnNote = (noteID,currentBoardID) => {
     newReturnedNote.archived = false;
     boards[currentBoardIdx].notes[index] = newReturnedNote;
     console.log( boards[currentBoardIdx].notes[index]);
+    storeData();
     renderArchivednotes();
 }
 
