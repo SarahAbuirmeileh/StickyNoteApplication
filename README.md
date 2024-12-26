@@ -3,7 +3,7 @@ The Sticky Notes application is a dynamic web-based solution for managing multip
  
 <!-- 👉 [Poduction version of app]()  -->
  
-## Let's take a tour 🚀 
+## Let's take a tour on the application features 🚀 
  
 ### 1. Board Management: 
 ![image](./images/Board%20Management.png) 
