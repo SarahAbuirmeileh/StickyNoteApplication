@@ -619,20 +619,21 @@ const readData = () => {
 // >>>>>>>>>>> archive the noote in the archived notes ::: 
 // >>>>>>>>>>> warninig !!!!!!!!!! another ikmplementaion for the index in noteObject ,,take it as the UUID 
 const archiveNote = (index,currentBoardID) => {
-
-    const currentBoard = boards.find(board => board.id === currentBoardID);
-    const currentBoardIdx = boards.findIndex(board => board.id === currentBoardID);
-    const newArchivedNote = currentBoard.notes[index];
-    console.log(currentBoardID,newArchivedNote);
+    if (confirm(`Are you sure you want to archive this note ?`)) {
+        const currentBoard = boards.find(board => board.id === currentBoardID);
+        const currentBoardIdx = boards.findIndex(board => board.id === currentBoardID);
+        const newArchivedNote = currentBoard.notes[index];
+        console.log(currentBoardID,newArchivedNote);
+        
+        // >>>>>>>>>>> do this >> put the archive flag to true then render all    
+        // >>>>>>>>>>> just render the notes again without the archived ones::::  
+        newArchivedNote.archived = true;
+        newArchivedNote.activated =false;
     
-    // >>>>>>>>>>> do this >> put the archive flag to true then render all    
-    // >>>>>>>>>>> just render the notes again without the archived ones::::  
-    newArchivedNote.archived = true;
-    newArchivedNote.activated =false;
-
-    boards[currentBoardIdx].notes[index] = newArchivedNote;
-    storeData();
-    renderCurrentBoardNotes();
+        boards[currentBoardIdx].notes[index] = newArchivedNote;
+        storeData();
+        renderCurrentBoardNotes();
+    }
 }
 const renderArchivednotes = ()=>{
     arch = true; 
