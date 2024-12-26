@@ -64,22 +64,23 @@ const renderCurrentBoardNotes = (searchKeyword = "") => {
                                 background-color: ${note.color};
                                 width: ${note.width}px;
                                 height: ${note.height}px;
-                            ">
+                            "
+                            ondblclick="focusNoteContent(${index})"
+                        >
                             <p class="note-text" 
                                contenteditable="true" 
-                               ondblclick="this.focus()"
+                               id="note-text-${index}" 
                                onblur="editNoteContent(event, ${index})">
                                ${highlightText(note.content, searchKeyword)}
-                               
                             </p>
                             <div class="Bottom-elements">
                                 <p class="note-date">${note.createdDate}</p>
                                 <div class="note-colors"> 
                                     <div class="color-options">
                                         <div class="color-circle gray" data-color="gray" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
-                                    <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
-                                    <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
-                                    <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+                                        <div class="color-circle red" data-color="red" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+                                        <div class="color-circle green" data-color="green" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
+                                        <div class="color-circle blue" data-color="blue" onclick="changeNoteColor(event, '${note.id}','${note.boardID}')"></div>
                                     </div>
                                 </div>
                                 <button class="delete-btn" onclick="archiveNote(${index},'${note.boardID}')">X</button>
@@ -87,8 +88,8 @@ const renderCurrentBoardNotes = (searchKeyword = "") => {
                             <div class="resizer" style="background-color:${note.color}"></div>
                         </div>`
                     );
-                     // onblur: is triggered when a user finishes interacting with a contenteditable element
 
+                    // Initialize resizable and draggable functionalities
                     const noteElement = notesContainerElement.lastElementChild;
                     initializeResizer(noteElement, index);
                     initializeDragAndDrop(noteElement, index);
@@ -98,9 +99,18 @@ const renderCurrentBoardNotes = (searchKeyword = "") => {
     } else {
         // No boards -> no notes
         notesContainerElement.innerHTML = "";
-        console.log('No boards exist');
+        console.log("No boards exist");
     }
 };
+
+// Function to focus on the note content
+const focusNoteContent = (index) => {
+    const noteTextElement = document.getElementById(`note-text-${index}`);
+    if (noteTextElement) {
+        noteTextElement.focus();
+    }
+};
+
 
 // Attach event listeners to the search bar when the user has an input and when he clicks 'Enter' 
 searchBar.addEventListener('input', (event) => searchNotes(event.target.value));
