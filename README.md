@@ -1,7 +1,7 @@
 # Sticky Notes Application✨ 
 The Sticky Notes application is a dynamic web-based solution for managing multiple notes across customizable boards. Built entirely with front-end technologies, it provides a user-friendly interface for creating, organizing, and managing notes. No authentication or back-end services are required, making it lightweight and accessible. 
  
-<!-- 👉 [Poduction version of app]()  -->
+👉 [Poduction version of app](https://sticky-notes-app11.netlify.app) 
  
 ## Let's take a tour on the application features 🚀 
  
@@ -27,7 +27,7 @@ The Sticky Notes application is a dynamic web-based solution for managing multip
 - Edit notes directly by clicking on the text area. 
  
 ### 5. Note Deletion & Archiving: 
-<!-- ![image]() -->
+![image](./images/Note%20Deletion%20&%20Archiving.png)
 - Delete notes by moving them to an archive (trash). 
 - Access archived notes via a button in the bottom-right. 
 - View and manage deleted notes separately from active boards. 
