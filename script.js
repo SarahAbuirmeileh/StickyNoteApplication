@@ -508,7 +508,7 @@ const createStickyNote = () => {
     const noteObject = {
         id: crypto.randomUUID(),
         boardID: currentBoard.id,
-        content: '',
+        content: 'New Note',
         color: color,
         width: width,
         height: height,
@@ -637,8 +637,7 @@ const renderArchivednotes = () => {
             }
         })
     });
-    if(!archivedExits){
-
+    if (!archivedExits) {
         // If there is archived notes 
         notesContainerElement.innerHTML = `
             <h1 class="no-notes-message">There is no archived notes </h1>
